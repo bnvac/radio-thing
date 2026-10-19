@@ -29,3 +29,9 @@
 * **Decisions/Changes**: Power design: BQ24074 (power-path charger) + TPS63020 3.3 V buck-boost + low-ripple 5 V boost with LC filter for LD2450 + MAX17048 fuel gauge; XIAO ESP32S3 for lite pod. Controls: 5 glove-friendly buttons (UP/DOWN/OK/BACK/MODE) or EC11 encoder, LVGL input, OK on RTC GPIO for wake; pod has 1 button + RGB LED. Extra accuracy (§15): clean radar rail, DWM3000 pod-to-pod ranging (time-shared with X4), magnetometer + manual heading, corner-reflector calibration, warm-up, dual-radar fusion, timestamp sync.
 * **Known Bugs/Gaps**: Current-draw figures are estimates; verify LD2450 supply voltage/current and display-board charger before buying. DWM3000/X4 band overlap requires time multiplexing.
 <!-- MEMORY_UPDATE_END -->
+
+<!-- MEMORY_UPDATE_START -->
+### Update: 2026-10-19 (f)
+* **Decisions/Changes**: One custom PCB design for both pod and display (different population). ESP32-S3-WROOM-1U with U.FL→SMA for a detachable ESP-NOW antenna. Radar antenna detachability via plug-in "radar heads" on a keyed JST-GH connector with head-ID; on-board radar RF (SMA) rejected for v1 due to RF layout + FCC certification.
+* **Known Bugs/Gaps**: Awaiting answers: which antenna was meant, PCB design ownership, screen size, enclosure/waterproofing.
+<!-- MEMORY_UPDATE_END -->

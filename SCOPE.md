@@ -402,3 +402,47 @@ Main map
 | Buzzer / vibration motor | 1 | $2 |
 | DWM3000 ranging module (optional) | 1 per pod | $20–30 |
 | Aluminum corner reflector | 1 | $5 |
+
+---
+
+## 16. Single integrated PCB with detachable antenna/radar head
+
+### Key constraint (read first)
+Cheap radar modules (HLK-LD2450, X4M200) have their **antennas printed on the module**. There's no connector to attach an external antenna. To get a detachable radar antenna you either:
+
+| Option | What | Cost / risk | Recommendation |
+|---|---|---|---|
+| **A. Detachable radar *head*** | Main board has a keyed connector; the radar module + its antenna sit on a small "head" board that plugs in | Low. Keeps the module's FCC certification. Heads are swappable (24 GHz head, UWB head, directional head). | ✅ **v1** |
+| B. Radar chip on our PCB + SMA antenna port | Put the radar IC (e.g. Infineon BGT24 24 GHz, or a UWB radar IC) directly on the main board, with an SMA/2.92 mm connector | High. 24 GHz needs RF substrate (Rogers), controlled impedance, and lossy connectors. **We lose module certification and need our own FCC compliance.** UWB imaging also has the 15.509 restriction. | ❌ Not for v1. Revisit only if A's antennas limit accuracy. |
+
+**The ESP-NOW link antenna *can* be truly detachable now:** use the **ESP32-S3-WROOM-1U** (U.FL connector) instead of the -1 version (PCB antenna). Add a U.FL → SMA bulkhead on the case and screw on a 2.4 GHz whip or a small directional antenna. This also helps link range from drones.
+
+### One board design, two builds
+Same PCB, with different parts fitted. That's cheaper to fab and only one design to debug.
+
+| Block | Pod build | Display build |
+|---|---|---|
+| ESP32-S3-WROOM-1U (N8R8) + U.FL→SMA | ✅ | ✅ |
+| USB-C (charge + programming via native USB) | ✅ | ✅ |
+| BQ24074 charger + power-path, protected LiPo JST-PH | ✅ | ✅ |
+| TPS63020 3.3 V + filtered 5 V boost rail for radar | ✅ | 5 V rail unpopulated |
+| MAX17048 fuel gauge | ✅ | ✅ |
+| IMU w/ magnetometer (e.g. ICM-20948 or BMI270 + BMM150) | ✅ | optional |
+| **Radar head connector** (keyed, latching, e.g. JST-GH 6-pin: 5 V, 3.3 V, GND, UART TX/RX, EN) | ✅ | — |
+| Display FPC/header (SPI ST7796 3.5") | — | ✅ |
+| 5 tactile buttons / EC11 footprint | 1 button | ✅ all 5 |
+| RGB LED, buzzer/vibe footprint | LED | ✅ |
+| Optional DWM3000 footprint (pod ranging) | ✅ optional | — |
+| GoPro / 1/4"-20 mounting holes, board outline fits ≤ 60 g lite pod | ✅ | — |
+
+### Radar heads (plug into the head connector)
+- **Head-24:** LD2450 on a small carrier with an absorber backing. Nerf/SCAN.
+- **Head-UWB:** X4-based module (or the FMCW fallback). LISTEN/through-wall.
+- **Head-Dual:** both on one carrier, for the full pod.
+- The firmware reads a head ID (resistor on an ADC pin, or a tiny I2C EEPROM) and loads the right driver automatically.
+
+### PCB notes
+- 4-layer, 1.6 mm, standard FR-4 (fine, since no RF on the main board except the U.FL feed in the module).
+- Keep the buck-boost and boost converters far from the head connector. Ground stitching, LC filter at the head connector.
+- Fab + assembly: JLCPCB/PCBWay with mostly basic/extended parts. Expect ~$15–30/board in qty 5–10 before modules and battery.
+- Tools: KiCad 8+, schematic + layout kept in `/hardware` in this repo.
