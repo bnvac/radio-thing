@@ -211,3 +211,68 @@ Hand tremor is millimeters, about the same size as chest movement from breathing
 - Breathing detection behind walls with monostatic UWB radar (EURASIP 2011): https://dx.doi.org/10.1186/1687-1499-2011-20
 - Low-cost 24 GHz FMCW breathing detection with a Raspberry Pi (DTU thesis): https://upcommons.upc.edu/bitstreams/eaf25fce-867d-4f06-9fb0-4cd379fc1420/download
 - Commercial reference, RETIA ReTWis 5 (breathing-based localization): https://www.plantautomation-technology.com/products/retia/retwis
+
+---
+
+## 10. Mounting anywhere: drone, vehicle, adhesive (added 2026-10-19)
+
+### Architecture change: split into **Sensor Pod** + **Display Unit**
+Once the sensor goes on a drone or a wall, the screen can't be on the same box. So:
+
+```
+ [Sensor Pod]  ──wireless──>  [Display Unit]
+  radars + ESP32-S3             ESP32-S3 + 3.5" screen + battery
+  + IMU + battery               (handheld, wrist, or phone app later)
+  + universal mount plate
+```
+- **Handheld use** = the pod clips onto the back of the display unit, so it's one device again.
+- **Link:** ESP-NOW (ESP32 to ESP32, no router, ~100 m+ line of sight) by default. LoRa as an option for long range or through buildings. LoRa is low data, but we only send a target list (a few bytes per person), not raw radar data.
+- One display unit can show **several pods** at once (drone + 2 sticky pods) on one map.
+
+### Universal mount plate (one pod, many mounts)
+| Mount | How | Notes |
+|---|---|---|
+| Tripod / handheld | 1/4"-20 insert | Already planned |
+| Drone / helmet / vehicle | GoPro-style 2-prong + vibration-damping balls | Keep pod **< 100 g** so small drones can carry it |
+| Magnetic | Neodymium pad | Vehicles, steel doors (but it **can't see through** the steel it's stuck to) |
+| **Adhesive "sticky pod"** | 3M VHB pad, or suction cup for glass | Place on a wall and leave it. Sleeps and wakes every N seconds to save battery. Wall contact makes it **the most accurate mode** (see below). |
+
+### Moving platforms: the main problem
+Breathing moves the chest ~4–12 mm. A hovering drone wobbles by **centimeters**, and a vehicle shakes more than that. Raw readings from a moving platform will be full of fake "people". What works for each platform:
+
+| Platform | Moving people | Still people (breathing) | Best tactic |
+|---|---|---|---|
+| Sticky pod on wall | ✅ best | ✅ **best** | Stuck to the wall = zero relative motion |
+| Handheld braced on wall | ✅ | ✅ | LISTEN mode |
+| Drone **perched/landed** (ledge, roof, sill) | ✅ | ✅ | Land, rotors off, listen, take off |
+| Drone hovering near wall | 🟡 with compensation | 🔴 mostly no | Use as a moving scanner (see SAR below) |
+| Ground vehicle stopped | ✅ | 🟡 engine off | Stop, listen |
+| Vehicle/drone moving | 🟡 | 🔴 | Synthetic aperture imaging of the scene |
+
+Drone-specific issues:
+- **Propellers** create strong radar "micro-Doppler" clutter at the blade frequency. Point the radar away from the rotors, add an absorber/shield behind the antenna, and notch-filter the blade frequencies (read from motor RPM or measured).
+- **Drone radios:** check the drone's video/control bands don't overlap the UWB head's band. Common 2.4/5.8 GHz links are outside the X4's ~7–9 GHz bands, but verify for the actual module.
+- **Weight/legal:** FAA rules apply (registration over 250 g total). Only fly or stick pods on buildings where you have permission.
+
+---
+
+## 11. How to make it more accurate (ranked by payoff per dollar)
+
+1. **Wall-echo motion compensation (big win, free in software).** The wall is the strongest echo and it doesn't move. Any change in the wall echo's phase is *our* movement. Subtract it from every range bin and most of the hand and drone wobble cancels out. Combine this with the IMU for larger movements.
+2. **Couple to the wall.** Antenna flat against the wall (foam pad or adhesive) removes the strong air-to-wall reflection and a lot of clutter. This is why sticky pods and braced LISTEN beat everything else.
+3. **Look longer.** Averaging over 10–30 s instead of 3 s greatly reduces false breathing detections. Show the confidence rising on screen while it listens.
+4. **More viewpoints = real 2D positions.** Combine distance arcs from 2–3 sticky pods, or from several spots along the wall, to triangulate. A drone or vehicle **moving along the wall** acts as a large virtual antenna (synthetic aperture radar). With the platform position known from IMU + optical flow, a static scene can be imaged in 2D.
+5. **Calibrate for the wall.** Radio waves slow down inside brick and concrete, which makes people look farther away than they are. Measure the front and back wall echoes to estimate wall thickness and material, then correct the distance. This also feeds the BLOCKED / weak-signal logic.
+6. **Better antennas.** A directional patch-array or horn antenna with an absorber behind it reduces clutter from the operator, the drone, and the side walls. This is the main hardware upgrade after the module itself.
+7. **Smarter tracking.** Only confirm a person after M detections out of N frames. Use a Kalman tracker. Reject multipath "ghosts", which show up as a copy of a real person *farther away along the same line*.
+8. **Add a thermal camera for line-of-sight moments.** An MLX90640 (~$50) can't see through walls, but through open doors and windows it confirms "radar target = human", and it helps a lot for Nerf.
+9. **Build a test dataset.** Record labeled runs (0/1/2/3 people × still/moving × wall type × platform) and tune thresholds against them. Later, a small classifier (person vs. fan vs. curtain vs. pet) can run on the ESP32-S3.
+10. **Upgrade path:** MIMO UWB or a multi-channel FMCW head for true 2D from a single position. More cost and complexity, so only once v1 numbers show it's needed.
+
+### Updated milestones
+1. **M1:** Pod (ESP32-S3 + LD2450) + Display unit over ESP-NOW. Live dots. Handheld clip.
+2. **M2:** IMU + blockage/confidence + **wall-echo motion compensation**.
+3. **M3:** UWB head → LISTEN mode. Sticky pod with sleep/wake.
+4. **M4:** Multi-pod map, triangulation, wall-material calibration.
+5. **M5:** Drone mount: vibration isolation, rotor notch filter, perch-and-listen workflow.
+6. **M6 (stretch):** synthetic aperture scan from a moving drone or vehicle.

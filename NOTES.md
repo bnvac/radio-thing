@@ -11,3 +11,9 @@
 * **Decisions/Changes**: One unified device. ESP32-S3 + TFT + HLK-LD2450 (2D, Nerf/SCAN) + swappable UWB head (X4M200 preferred) + IMU. Modes: SCAN (free handheld), LISTEN (braced on wall/tripod, breathing), MULTI-SPOT (2D from arcs). Targets: ordinary building walls; brick/concrete best-effort; no rubble. See SCOPE.md §9.
 * **Known Bugs/Gaps**: UWB module availability unverified (X4 parts are 2017-era) -> confirm stock before M3; 24 GHz FMCW fallback. Counting capped at "3+".
 <!-- MEMORY_UPDATE_END -->
+
+<!-- MEMORY_UPDATE_START -->
+### Update: 2026-10-19 (c)
+* **Decisions/Changes**: Split into Sensor Pod (radars + ESP32-S3 + IMU + battery, <100 g, universal mount: tripod/GoPro/magnet/VHB adhesive) and Display Unit (ESP32-S3 + screen), linked by ESP-NOW (LoRa optional). Multi-pod map. Accuracy plan in SCOPE.md §11: wall-echo motion compensation, wall coupling, longer dwell, multi-view triangulation/SAR, wall calibration, directional antennas, M-of-N + Kalman tracking, optional MLX90640 thermal.
+* **Known Bugs/Gaps**: Breathing detection from a hovering/moving drone not expected to work; perch-and-listen instead. Propeller micro-Doppler needs notch filtering. Check drone RF band overlap with UWB head. FAA/permission constraints.
+<!-- MEMORY_UPDATE_END -->
