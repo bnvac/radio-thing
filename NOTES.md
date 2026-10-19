@@ -33,5 +33,5 @@
 <!-- MEMORY_UPDATE_START -->
 ### Update: 2026-10-19 (f)
 * **Decisions/Changes**: One custom PCB design for both pod and display (different population). ESP32-S3-WROOM-1U with U.FL→SMA for a detachable ESP-NOW antenna. Radar antenna detachability via plug-in "radar heads" on a keyed JST-GH connector with head-ID; on-board radar RF (SMA) rejected for v1 due to RF layout + FCC certification.
-* **Known Bugs/Gaps**: Awaiting answers: which antenna was meant, PCB design ownership, screen size, enclosure/waterproofing.
+* **Known Bugs/Gaps**: Resolved: both antennas detachable; Claude drafts KiCad; 3.5" ST7796; splash/drop-resistant case. Next: pin map + BOM, then schematic.
 <!-- MEMORY_UPDATE_END -->

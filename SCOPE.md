@@ -446,3 +446,9 @@ Same PCB, with different parts fitted. That's cheaper to fab and only one design
 - Keep the buck-boost and boost converters far from the head connector. Ground stitching, LC filter at the head connector.
 - Fab + assembly: JLCPCB/PCBWay with mostly basic/extended parts. Expect ~$15–30/board in qty 5–10 before modules and battery.
 - Tools: KiCad 8+, schematic + layout kept in `/hardware` in this repo.
+
+### Decisions (2026-10-19, round 4)
+- **Detachable:** both. SMA (via U.FL) for the ESP-NOW link antenna, plus plug-in radar heads.
+- **PCB:** Claude drafts in KiCad (schematic, BOM, pin map in `/hardware`). Final layout review and JLCPCB order with assembly afterwards.
+- **Screen:** 3.5" (320×480, ST7796 SPI).
+- **Ruggedness:** splash/drop resistant. Gasketed 3D-printed case, TPU bumpers, sealed button caps, SMA bulkhead with O-ring, USB-C with rubber flap.
