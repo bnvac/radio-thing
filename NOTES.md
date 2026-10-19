@@ -17,3 +17,9 @@
 * **Decisions/Changes**: Split into Sensor Pod (radars + ESP32-S3 + IMU + battery, <100 g, universal mount: tripod/GoPro/magnet/VHB adhesive) and Display Unit (ESP32-S3 + screen), linked by ESP-NOW (LoRa optional). Multi-pod map. Accuracy plan in SCOPE.md §11: wall-echo motion compensation, wall coupling, longer dwell, multi-view triangulation/SAR, wall calibration, directional antennas, M-of-N + Kalman tracking, optional MLX90640 thermal.
 * **Known Bugs/Gaps**: Breathing detection from a hovering/moving drone not expected to work; perch-and-listen instead. Propeller micro-Doppler needs notch filtering. Check drone RF band overlap with UWB head. FAA/permission constraints.
 <!-- MEMORY_UPDATE_END -->
+
+<!-- MEMORY_UPDATE_START -->
+### Update: 2026-10-19 (d)
+* **Decisions/Changes**: ESP-NOW confirmed (LoRa out of v1). Drone-agnostic (FPV + DJI): self-powered pod, GoPro mount, lite pod ≤60 g / full pod ≤100 g, rotor clutter filter estimates blade frequency from radar data (no RPM telemetry).
+* **Known Bugs/Gaps**: 2.4 GHz coexistence with ELRS/DJI control links untested; must range test before flight.
+<!-- MEMORY_UPDATE_END -->

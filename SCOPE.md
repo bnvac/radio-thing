@@ -276,3 +276,22 @@ Drone-specific issues:
 4. **M4:** Multi-pod map, triangulation, wall-material calibration.
 5. **M5:** Drone mount: vibration isolation, rotor notch filter, perch-and-listen workflow.
 6. **M6 (stretch):** synthetic aperture scan from a moving drone or vehicle.
+
+---
+
+## 12. Decisions (2026-10-19, round 3)
+
+- **Link: ESP-NOW** between pod and display unit. LoRa dropped from v1.
+- **Drone: platform-agnostic** (FPV quads and DJI-style camera drones).
+
+What these mean for the design:
+- **Self-contained pod.** It has its own battery and takes no power or telemetry from the drone. DJI doesn't expose motor or flight data to payloads, so rotor-noise filtering has to **measure blade frequencies from the radar data itself** rather than read RPM.
+- **Weight budget:** aim for **≤ 60 g** so a DJI Mini-class drone can still fly safely. FPV quads can carry the full ≤ 100 g pod. Plan a "lite" pod (LD2450 + ESP32 + IMU + small LiPo) and a "full" pod (adds the UWB head).
+- **Mount:** GoPro-style 2-prong + damping balls is the common standard on both drone types. Velcro/zip-tie straps as a fallback.
+- **2.4 GHz coexistence:** ESP-NOW runs on 2.4 GHz, the same band as many FPV control links (ExpressLRS 2.4, TBS Tracer) and DJI's links. To avoid hurting control range:
+  - Keep packets small: target lists only, at ≤ 10 Hz.
+  - Fix the Wi-Fi channel, configurable from the display unit.
+  - Mount the pod antenna away from the drone's receiver antennas.
+  - **Range test with the drone's control link active before any real flight.**
+  - ESP32 long-range Wi-Fi mode can extend ESP-NOW range if needed.
+- **Safety:** pod failure must never affect the drone. It's electrically separate and only mechanically attached.
