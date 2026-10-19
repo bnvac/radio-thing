@@ -295,3 +295,110 @@ What these mean for the design:
   - **Range test with the drone's control link active before any real flight.**
   - ESP32 long-range Wi-Fi mode can extend ESP-NOW range if needed.
 - **Safety:** pod failure must never affect the drone. It's electrically separate and only mechanically attached.
+
+---
+
+## 13. Power: LiPo charging circuit (pod + display unit)
+
+### Requirements
+- 1-cell LiPo (3.0–4.2 V), USB-C charging.
+- **Runs while charging** (power-path). A plain TP4056 doesn't do this cleanly.
+- Battery protection (over-discharge, over-current, short).
+- Battery % on the screen.
+- **Clean power for the radars.** Switching noise on the radar supply shows up as false targets.
+
+### Recommended circuit (custom build)
+```
+USB-C ─> [BQ24074 charger + power-path] ─> SYS rail (3.5–4.4 V)
+                 │                              ├─> [3.3 V buck-boost TPS63001/TPS63020] ─> ESP32-S3, IMU, screen
+            [1S LiPo + protection]              └─> [5 V boost TPS61023] ─> [LC filter / ferrite + 47–100 µF] ─> LD2450 (5 V)
+                 │                                                            (UWB head on its own filtered rail)
+            [MAX17048 fuel gauge] ─I2C─> ESP32-S3 (battery %)
+```
+| Part | Job | Why this one |
+|---|---|---|
+| **BQ24074** (Adafruit #4755 breakout exists) | Charger, 1.5 A max, power-path, thermistor input | Device runs from USB while charging. Safe charge termination. |
+| **TPS63001/TPS63020** buck-boost | Steady 3.3 V from 3.0–4.2 V | Uses the whole battery. An LDO drops out around 3.5 V. |
+| **TPS61023** (or similar low-ripple boost) | 5 V for the LD2450 | Avoid the cheap MT3608, which is noisy. Add an LC/ferrite filter. |
+| **MAX17048** | Fuel gauge | Accurate %, not just a voltage guess. |
+| LiPo with built-in protection PCB, JST-PH 2.0 | Battery | Check connector polarity. Brands don't agree. |
+| Slide switch on battery output, or button soft-latch | Power on/off | Pod: hard switch. Display: soft power on the OK button. |
+
+### Cheaper / faster option
+- **Pod (lite):** **Seeed XIAO ESP32S3** has a LiPo charger built in and is tiny and light. Add a 5 V boost for the LD2450.
+- **Display:** a TP4056 USB-C module **with protection** (DW01) + a load-sharing MOSFET/diode circuit + a buck-boost. Fine for prototypes. Move to BQ24074 for v1.
+- Some ESP32-S3 display boards (e.g. LilyGO T-Display-S3) have a charger and 2 buttons built in, but the screen is small (1.9"). **Check the charger and pinout for the specific board before buying.**
+
+### Battery sizing (estimates; measure in M5)
+| Unit | Typical draw | Cell | Approx runtime | Cell weight |
+|---|---|---|---|---|
+| Lite pod | ~150–200 mA | 500 mAh | ~2–3 h | ~10–12 g |
+| Full pod | ~250–400 mA | 800–1000 mAh | ~2–3 h | ~18–22 g |
+| Display unit | ~200–300 mA (backlight dominates) | 1500–2000 mAh | ~5–8 h | ~30–40 g |
+| Sticky pod (sleep/wake duty cycle) | avg ~20–40 mA | 1000 mAh | ~1 day | |
+
+Rule: **never let the drone's battery power the pod** (see §12).
+
+---
+
+## 14. Controls: tactile buttons + menus
+
+### Display unit (glove-friendly)
+| Button | Function |
+|---|---|
+| **UP / DOWN** | Move through menus. On the map: zoom. |
+| **OK** (hold 2 s = power on/off) | Select. On the map: start LISTEN. |
+| **BACK** | Back. On the map: switch between pods. |
+| **MODE** (side) | Cycle SCAN → LISTEN → MULTI-SPOT |
+
+- Parts: 12×12 mm tactile switches with caps (big enough for gloves), **or** one EC11 rotary encoder with push + BACK button (fewer holes, easy with gloves). LVGL supports both natively (keypad / encoder input).
+- Wiring: each button to its own GPIO with the internal pull-up, to GND. 20–30 ms software debounce. **OK on an RTC-capable GPIO** so it can wake the ESP32-S3 from deep sleep.
+- Optional buzzer/vibration motor: a buzz when a person is detected, so you don't have to stare at the screen.
+
+### Pod
+- **One button:** short press = cycle mode, long press = pair with display unit, very long = power off (if soft power is used).
+- **RGB status LED:** green = running, blue blink = pairing, red = BLOCKED / low battery.
+
+### Menu tree (v1)
+```
+Main map
+├─ Mode: SCAN / LISTEN / MULTI-SPOT
+├─ Pods: list · pair new · rename · locate (blink LED)
+├─ Wall: auto-calibrate · material preset (drywall / brick / concrete)
+├─ Settings: ESP-NOW channel · brightness · units (m/ft) · buzzer · Nerf mode
+└─ Status: battery (display + each pod) · signal strength · firmware
+```
+
+---
+
+## 15. More accuracy upgrades (on top of §11)
+
+**Hardware**
+1. **Clean radar power** (§13): separate filtered rail, star ground. This is a cheap and real fix for phantom targets.
+2. **Pod-to-pod UWB ranging (DWM3000 module, ~$20–30 each):** pods measure their distance to each other to ~10 cm. Triangulation from multiple pods then uses *known* pod positions instead of guesses, which is the biggest accuracy gain for multi-pod maps. ⚠ It shares the UWB band with the X4 radar head, so **time-share them** (range pods, then radar, never both at once).
+3. **Heading for every pod:** IMU with a magnetometer, plus a "point the pod at the wall and press OK" alignment step. Compass readings are unreliable near steel, so the manual alignment is the fallback.
+4. **Directional antenna + absorber backing** (§11), and keep metal (battery, screws) behind the antenna, never in front.
+
+**Calibration**
+5. **Corner-reflector check:** a ~$5 aluminum corner reflector at a measured distance (e.g. 2.00 m) checks range offset and angle offset each time the hardware changes. Store the offsets in flash.
+6. **Mounting-angle offset:** LD2450 angle readings shift if the module is tilted in the case, so calibrate once after assembly.
+7. **Warm-up:** radar readings drift for the first minute or two. Show "warming up" and hold off on LISTEN until it's stable.
+
+**Software**
+8. **Fuse both radars:** only show a confident dot when the LD2450 angle and the UWB distance agree. Show a single-sensor hit as a fainter "maybe".
+9. **Timestamps on everything:** sync pod clocks over ESP-NOW so multi-pod data lines up in time.
+10. **Per-wall auto-calibration** (§11.5) from the menu.
+11. **Measure it:** keep the labeled test matrix (§8). Every change has to improve hit rate, false alarms, or count error against it, or it gets rolled back.
+
+### Updated BOM additions
+| Item | Qty | Approx |
+|---|---|---|
+| BQ24074 charger board | 2 | $8 ea |
+| TPS63020 3.3 V buck-boost | 2 | $5 ea |
+| 5 V low-ripple boost | 2 | $4 ea |
+| MAX17048 fuel gauge | 2 | $5 ea |
+| LiPo 500 mAh (pod) / 2000 mAh (display) | 1 + 1 | $8 / $12 |
+| 12 mm tactile switches + caps (or EC11 encoder) | 5 | $3 |
+| Buzzer / vibration motor | 1 | $2 |
+| DWM3000 ranging module (optional) | 1 per pod | $20–30 |
+| Aluminum corner reflector | 1 | $5 |

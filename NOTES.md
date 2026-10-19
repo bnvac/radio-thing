@@ -23,3 +23,9 @@
 * **Decisions/Changes**: ESP-NOW confirmed (LoRa out of v1). Drone-agnostic (FPV + DJI): self-powered pod, GoPro mount, lite pod ≤60 g / full pod ≤100 g, rotor clutter filter estimates blade frequency from radar data (no RPM telemetry).
 * **Known Bugs/Gaps**: 2.4 GHz coexistence with ELRS/DJI control links untested; must range test before flight.
 <!-- MEMORY_UPDATE_END -->
+
+<!-- MEMORY_UPDATE_START -->
+### Update: 2026-10-19 (e)
+* **Decisions/Changes**: Power design: BQ24074 (power-path charger) + TPS63020 3.3 V buck-boost + low-ripple 5 V boost with LC filter for LD2450 + MAX17048 fuel gauge; XIAO ESP32S3 for lite pod. Controls: 5 glove-friendly buttons (UP/DOWN/OK/BACK/MODE) or EC11 encoder, LVGL input, OK on RTC GPIO for wake; pod has 1 button + RGB LED. Extra accuracy (§15): clean radar rail, DWM3000 pod-to-pod ranging (time-shared with X4), magnetometer + manual heading, corner-reflector calibration, warm-up, dual-radar fusion, timestamp sync.
+* **Known Bugs/Gaps**: Current-draw figures are estimates; verify LD2450 supply voltage/current and display-board charger before buying. DWM3000/X4 band overlap requires time multiplexing.
+<!-- MEMORY_UPDATE_END -->
