@@ -120,14 +120,16 @@ A calibration step against a known wall type (drywall, brick, and so on) at star
 
 ---
 
-## 7. Decisions needed
+## 7. Decisions (resolved 2026-10-19)
 
-1. **Primary goal for v1:** Nerf toy (Tier A) or SAR-ish breathing finder (Tier C)? *My recommendation: A first. It proves the screen, battery and firmware for about $50, then C.*
-2. **Budget ceiling:** under $100, under $400, or under $1,000?
-3. **Processor:** ESP32-S3 only (cheap, low power, limited DSP) or Raspberry Pi (easy Python DSP, more power draw)? *Recommendation: ESP32 for A/B, Pi for C.*
-4. **Handheld vs tripod:** handheld only works for moving targets. Breathing detection needs it mounted.
-5. **2D position through walls:** accept "distance only + multi-spot readings" in v1, or fund a multi-antenna array later?
-6. **Wall types we care about:** interior drywall only, or also brick/concrete? This decides between 24 GHz and UWB.
+1. **One device** for both SAR and Nerf. → See §9 for the unified design.
+2. **Walls:** ordinary building walls (drywall, wood, plaster). Brick/concrete are nice to have. No rubble. → Needs a lower-frequency **UWB** head, not mmWave.
+3. **Cost:** as low as possible.
+4. **Form factor:** handheld preferred, and it must also mount (tripod or wall). → Two modes, see §9.
+
+Still open:
+- **2D position through walls:** accept "distance + multi-spot readings" in v1? (Recommended.)
+- **Budget ceiling:** the unified build lands around $150–400 depending on which UWB module we can buy (§9).
 
 ---
 
@@ -140,3 +142,72 @@ A calibration step against a known wall type (drywall, brick, and so on) at star
 5. **M5 (optional):** Tier B mmWave head for high-accuracy counting with line of sight.
 
 Test protocol: run every milestone against a fixed scenario matrix (0/1/2/3 people × moving/still × wall type × distance) and record hit rate, false alarms, and count error. Without numbers, "works well" can't be checked.
+
+---
+
+## 9. Unified v1 design: "one device, two radars, two modes"
+
+### Why two radars in one box
+No single cheap radar does both jobs well:
+- **24 GHz HLK-LD2450 (~$15):** gives 2D dots for up to 3 movers. Weak through walls.
+- **UWB impulse radar (3–10 GHz):** gets through drywall and brick and can detect breathing. Distance only (1D).
+
+The firmware **fuses** the two. The UWB head says *someone is 3.2 m away*. The LD2450 gives angles when the signal gets through, and multi-spot readings fill in when it doesn't. One screen, one UI, one battery.
+
+### Hardware (v1)
+
+| Block | Part | Approx cost | Notes |
+|---|---|---|---|
+| MCU + display | ESP32-S3 + 3.5" IPS SPI TFT (ST7796), or an all-in-one ESP32-S3 display board | $20–35 | Breathing DSP (FFT over ~100 range bins at ~20 fps) fits on an S3. |
+| 2D radar | HLK-LD2450 (24 GHz) | $10–20 | UART. Nerf mode and line-of-sight tracking. |
+| Through-wall radar | **Option 1:** Novelda X4-based module (X4M200 has respiration processing built in and outputs over UART; it launched at ~$80/1k). **Option 2:** X4 dev kit (X4M02/X4M03), raw frames over USB/UART. **Option 3 (fallback):** 24 GHz FMCW transceiver (e.g. Silicon Radar TRX_024) with our own DSP. | $80–300 | **Availability unverified.** X4 modules are 2017-era parts. Check stock at Mouser/Digi-Key/Arrow before committing. The firmware treats this as a swappable "radar head" driver. |
+| Motion sensor | IMU (e.g. BMI270/MPU-6050) | $3–8 | Detects hand shake, gates breathing mode, shows HOLD STILL. |
+| Power | 2× 18650 or 1× LiPo + USB-C charge/boost | $10–20 | |
+| Mount | 1/4"-20 tripod insert + foam wall pad on the antenna face | $5 | One body, mounts either way. |
+| Enclosure | 3D-printed, **plastic window over the antennas (no metal or paint)** | $5–10 | |
+| **Total** | | **~$140–400** | Most of the spread is the UWB head. |
+
+### Operating modes
+1. **SCAN (handheld, free):** LD2450 + UWB motion. Shows moving people as dots and distance arcs, updated live. This is Nerf mode, and also a quick SAR sweep.
+2. **LISTEN (handheld braced on the wall, or on a tripod):** you press the foam pad flat on the wall and keep it still. This is how commercial handheld through-wall radars are used. After 10–20 s it shows breathing detections: "1 person · 3.2 m · 14 breaths/min · confidence 78%". The IMU cancels the reading if you move.
+3. **MULTI-SPOT (optional):** take a LISTEN reading at 2–3 spots along the wall. Intersecting the distance arcs gives a rough 2D position (about ±0.5–1 m).
+
+### Expected performance (v1 targets; to be measured, not promised)
+
+| Wall | Moving person | Still person (breathing) |
+|---|---|---|
+| Drywall / wood / interior door | ✅ ~6–8 m | ✅ ~4–5 m (LISTEN only) |
+| Plaster/lath (wood lath) | ✅ | 🟡 shorter range |
+| Single brick | 🟡 ~3–5 m | 🟡 ~2–3 m |
+| Concrete block / poured concrete (no rebar) | 🟡 short range | 🔴 unreliable |
+| Rebar concrete, metal lath stucco, foil insulation, metal doors | 🔴 → **BLOCKED** shown | 🔴 → **BLOCKED** shown |
+
+Counting: v1 should be reliable for **0–3 people**. Show "3+" beyond that instead of guessing a number.
+
+### Handheld reality check
+Hand tremor is millimeters, about the same size as chest movement from breathing. That's why handheld LISTEN mode **has to be braced on the wall**, with the IMU checking it. Moving targets work fine in free-handheld SCAN mode. Heartbeat detection stays out of v1.
+
+### Firmware layout (proposed)
+```
+/firmware
+  radar_ld2450.*    UART parser -> targets[x,y,v]
+  radar_uwb.*       driver interface (X4M200 | X4 raw | FMCW) -> range frames / vitals
+  clutter.*         background subtraction (pure)
+  detect.*          CFAR, breathing band-pass + confidence (pure)
+  blockage.*        BLOCKED / NO PENETRATION / HOLD STILL logic (pure)
+  fuse_track.*      merge LD2450 + UWB, Kalman tracker, count
+  ui.*              LVGL radar view, banners, mode switching
+```
+
+### Revised milestones
+1. **M1:** ESP32-S3 + TFT + LD2450 → SCAN mode with live dots (Nerf-ready, ~$50).
+2. **M2:** IMU + blockage/confidence banners. Test with a baking sheet behind drywall.
+3. **M3:** buy/confirm the UWB head, then LISTEN mode for breathing through drywall at 1–5 m. Log hit rate and false alarms.
+4. **M4:** test brick/concrete, then MULTI-SPOT 2D, then the fused display.
+5. **M5:** enclosure, tripod mount, battery life testing.
+
+### Sources consulted
+- Novelda X4M200 launch (respiration zone 0.4–5 m, ~$80/1k in 2017): https://www.digitalengineering247.com/article/novelda-offers-two-new-improved-modules-sensing-monitoring
+- Breathing detection behind walls with monostatic UWB radar (EURASIP 2011): https://dx.doi.org/10.1186/1687-1499-2011-20
+- Low-cost 24 GHz FMCW breathing detection with a Raspberry Pi (DTU thesis): https://upcommons.upc.edu/bitstreams/eaf25fce-867d-4f06-9fb0-4cd379fc1420/download
+- Commercial reference, RETIA ReTWis 5 (breathing-based localization): https://www.plantautomation-technology.com/products/retia/retwis
