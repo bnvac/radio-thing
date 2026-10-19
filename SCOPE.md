@@ -452,3 +452,16 @@ Same PCB, with different parts fitted. That's cheaper to fab and only one design
 - **PCB:** Claude drafts in KiCad (schematic, BOM, pin map in `/hardware`). Final layout review and JLCPCB order with assembly afterwards.
 - **Screen:** 3.5" (320×480, ST7796 SPI).
 - **Ruggedness:** splash/drop resistant. Gasketed 3D-printed case, TPU bumpers, sealed button caps, SMA bulkhead with O-ring, USB-C with rubber flap.
+
+---
+
+## 17. Build status (2026-10-19)
+
+- **Hardware** (`hardware/`): KiCad 9 schematic + placed 4-layer PCB, generated from `hardware/design.py`.
+  - ERC clean (2 expected warnings). Netlist verified pin-by-pin against the design and the firmware pin map.
+  - PCB has 0 electrical DRC errors and 0 schematic-parity issues. **Not routed yet.**
+  - See `hardware/README.md` for the datasheet-verify list and the layout steps.
+- **Firmware** (`firmware/`): PlatformIO, ESP32-S3.
+  - `pod` and `display` builds compile; 55/55 host unit tests pass.
+  - LD2450 SCAN path, ESP-NOW protocol, tracker, menus and buttons are done. The UWB head driver, breathing detection and wall calibration are stubbed.
+  - Not yet run on real hardware. See `firmware/README.md`.

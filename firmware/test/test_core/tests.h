@@ -1,0 +1,9 @@
+#pragma once
+void run_ld2450_tests();
+void run_protocol_tests();
+void run_tracker_tests();
+void run_blockage_tests();
+void run_head_id_tests();
+void run_debounce_tests();
+void run_fuel_tests();
+void run_geometry_tests();

@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "RadioThing")(type "KiCad")(uri "${KIPRJMOD}/radio-thing.kicad_sym")(options "")(descr "Radio Thing custom symbols"))
+)
