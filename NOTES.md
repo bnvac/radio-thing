@@ -47,3 +47,9 @@
 * **Decisions/Changes**: Display controls cut to 3 buttons (UP/OK/DOWN), centred under the screen at 20 mm pitch on the tab. Holds: UP 1.5 s = mode, OK 1.5 s = back, OK 3 s = sleep. Debouncer gained last_hold_ms() (+1 test, 56 total). GPIO7/15 freed to test pads TP1/TP2.
 * **Known Bugs/Gaps**: Button positions assume the display module is centred over the main area; confirm with the real module. PCB still unrouted.
 <!-- MEMORY_UPDATE_END -->
+
+<!-- MEMORY_UPDATE_START -->
+### Update: 2026-10-20 (b)
+* **Decisions/Changes**: Full hardware check. Datasheet verification by 2 sub-agents gave 13 fixes (ITERM 3.0k, ILIM 1.78k, L1 2.2 uH + VINA RC, TPS61202 COUT 22 uF, LIS2MDL C1 220 nF + 10 uF, MSP3525 display on PWR_EN with direct LED-pin drive + SD_CS pull-up, buzzer from 3V3 via 15R, DWM IRQ pull-down, head UART series R, tab M3 holes). Stackup changed to F sig / In1 GND / In2 pwr+sig / B sig. Freerouting 2.1.0 trial: 9 of 243 left unrouted.
+* **Known Bugs/Gaps**: Routing not done. Open: confirm MSP3525 module + J3/button alignment, buzzer part, MAX17048 EP land pattern, USBLC6 pinout (secondary source), LD2450 connector pinout.
+<!-- MEMORY_UPDATE_END -->

@@ -12,9 +12,9 @@ One PCB for both builds:
 | Step | State |
 |---|---|
 | Schematic | ✅ Generated, KiCad ERC: 2 warnings (unused bidirectional pins tied to GND, both expected) |
-| Netlist | ✅ 328 pin assignments verified against `design.py`, 32 MCU pins verified against `firmware/include/board_pins.h` |
-| PCB placement | ✅ All 84 footprints placed by block, every pad on its net. DRC: **0 electrical errors, 0 schematic-parity issues**. Only silkscreen overlap warnings remain. |
-| PCB routing | ❌ **Not done.** 246 connections unrouted. See "Next: layout" below. |
+| Netlist | ✅ 334 pin assignments verified against `design.py`, 30 MCU pins verified against `firmware/include/board_pins.h` |
+| PCB placement | ✅ All footprints placed by block, every pad on its net. DRC: **0 electrical errors, 0 schematic-parity issues**. Only silkscreen warnings remain. Connector orientation and edge overhang checked. Nothing within 1.2 mm of the V-score. |
+| PCB routing | ⚠ **Not done, but routable.** In a Freerouting trial (4 layers, In1 = GND), ~96% routed automatically, with **9 of 243 connections** left for hand routing. Power stages and USB should be hand-routed anyway. See "Next: layout". |
 | Datasheet checks | ✅ Done 2026-10-20. 13 fixes applied; 6 items need the real parts in hand (see below). |
 
 **Don't order boards yet.** Routing and the 6 open items below come first.
