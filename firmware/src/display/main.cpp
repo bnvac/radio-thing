@@ -22,7 +22,8 @@
 namespace {
 
 constexpr uint32_t kFrameMs = 100;       // UI refresh ~10 Hz
-constexpr uint32_t kSleepHoldMs = 2000;  // OK held this long = deep sleep
+constexpr uint32_t kSleepHoldMs = 3000;  // OK held this long = deep sleep
+constexpr uint32_t kBackHoldMs = 1500;   // OK released after this long = BACK
 constexpr int kBuzzChannel = 4;
 constexpr uint32_t kChirpCooldownMs = 1500;
 
@@ -39,7 +40,10 @@ QueueHandle_t g_rx_queue;
 
 const uint8_t kBroadcast[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
-// Debouncers: OK uses the 2 s long-press for deep sleep.
+// 3 physical buttons mapped onto the UI's 5 logical actions:
+//   UP   short -> UP,   hold 1.5 s -> MODE
+//   OK   short -> OK,   released after >= 1.5 s -> BACK,   hold 3 s -> deep sleep
+//   DOWN short -> DOWN
 struct ButtonDef {
     uint8_t pin;
     Button id;
@@ -47,10 +51,8 @@ struct ButtonDef {
 };
 ButtonDef g_buttons[] = {
     {PIN_BTN_UP, Button::UP, rt::Debouncer(25, 1500)},
-    {PIN_BTN_DOWN, Button::DOWN, rt::Debouncer(25, 1500)},
     {PIN_BTN_OK, Button::OK, rt::Debouncer(25, kSleepHoldMs)},
-    {PIN_BTN_BACK, Button::BACK, rt::Debouncer(25, 1500)},
-    {PIN_BTN_MODE, Button::MODE, rt::Debouncer(25, 1500)},
+    {PIN_BTN_DOWN, Button::DOWN, rt::Debouncer(25, 1500)},
 };
 
 float g_batt_pct = 0, g_batt_v = 0;
@@ -204,8 +206,14 @@ void loop() {
 
     for (auto& b : g_buttons) {
         rt::ButtonEvent e = b.deb.update(digitalRead(b.pin) == LOW, now);
-        if (e == rt::ButtonEvent::SHORT_PRESS) g_ui.on_button(b.id, now);
-        else if (e == rt::ButtonEvent::LONG_PRESS && b.id == Button::OK) deep_sleep();
+        if (e == rt::ButtonEvent::SHORT_PRESS) {
+            Button act = b.id;
+            if (b.id == Button::OK && b.deb.last_hold_ms() >= kBackHoldMs) act = Button::BACK;
+            g_ui.on_button(act, now);
+        } else if (e == rt::ButtonEvent::LONG_PRESS) {
+            if (b.id == Button::OK) deep_sleep();
+            else if (b.id == Button::UP) g_ui.on_button(Button::MODE, now);
+        }
     }
     process_rx(now);
     buzzer_update(now);

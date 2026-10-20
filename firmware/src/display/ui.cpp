@@ -552,7 +552,7 @@ void Ui::draw_menu() {
     d.setFont(&fonts::Font2);
     d.setTextColor(cDim());
     d.setTextDatum(lgfx::bottom_left);
-    d.drawString(selectable ? "UP/DOWN move   OK select   BACK back" : "BACK back", 8, kH - 4);
+    d.drawString(selectable ? "UP/DOWN move  OK select  hold OK back" : "hold OK = back", 8, kH - 4);
 }
 
 void Ui::draw_edit() {
@@ -573,7 +573,7 @@ void Ui::draw_edit() {
     d.setFont(&fonts::Font2);
     d.setTextColor(cDim());
     d.setTextDatum(lgfx::bottom_center);
-    d.drawString(ch ? "UP/DOWN change  OK apply (pods follow)  BACK cancel" : "UP/DOWN change  OK save  BACK cancel", kW / 2, kH - 6);
+    d.drawString(ch ? "UP/DOWN change  OK apply (pods follow)  hold OK cancel" : "UP/DOWN change  OK save  hold OK cancel", kW / 2, kH - 6);
 }
 
 void Ui::render(uint32_t now) {

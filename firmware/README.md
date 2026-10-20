@@ -49,9 +49,11 @@ Display: ESP-NOW rx callback -> queue -> validate (`deserialize`) -> `PodTable` 
 - Target kinds from the LD2450 pod: moving (>100 mm/s track speed) = MOVING, stationary = MAYBE
   (hollow dot, confidence capped at 50) because stationary returns may be clutter.
 - People count is the number of confirmed tracks of the selected pod, shown capped as `3+`.
-- Controls: UP/DOWN zoom (3/6/9 m) on the map and move in menus; OK opens the menu (deviation from
-  the SCOPE table "OK = start LISTEN": use MODE for that); BACK switches pod on the map / goes back;
-  MODE cycles SCAN/LISTEN/MULTI on all pods; hold OK 2 s = deep sleep, wake on OK (ext0, GPIO6).
+- Controls (3 buttons under the screen; mapped to the UI's UP/DOWN/OK/BACK/MODE actions in `main.cpp`):
+  - UP: short = zoom in (3/6/9 m) / move up; hold 1.5 s = cycle SCAN/LISTEN/MULTI on all pods.
+  - OK: short = open menu / select; released after >= 1.5 s = back (on the map: next pod);
+    hold 3 s = deep sleep, wake on OK (ext0, GPIO6).
+  - DOWN: short = zoom out / move down.
 - Pod button: short = cycle mode, long (1.5 s) = pairing beacon for 30 s (blue blink,
   PAIRING flag). Display Menu > Pods > Pair new pods sends PAIR_ACK. Pairing is only a handshake
   of the LED/flag state; any valid pod is accepted by the display regardless.

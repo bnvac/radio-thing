@@ -208,7 +208,7 @@ def place_symbol(p, sym, x, y, root):
     if p.note:
         extra["Note"] = p.note
     return place_raw(p.lib_id, sym, p.ref, p.value, p.footprint, x, y, root,
-                     in_bom=not p.lib_id.startswith("Mechanical:"), on_board=True,
+                     in_bom=not p.lib_id.startswith(("Mechanical:", "Connector:TestPoint")), on_board=True,
                      dnp=(p.variant == "OPT"), extra=extra)
 
 

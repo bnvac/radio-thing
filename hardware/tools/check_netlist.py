@@ -36,8 +36,7 @@ expect = {"PIN_BOOT": "BOOT", "PIN_USB_DN": "USB_DN", "PIN_USB_DP": "USB_DP", "P
           "PIN_I2C_SDA": "I2C_SDA", "PIN_I2C_SCL": "I2C_SCL", "PIN_SPI_SCK": "SPI_SCK", "PIN_SPI_MOSI": "SPI_MOSI",
           "PIN_SPI_MISO": "SPI_MISO", "PIN_SPI_CS": "SPI_CS", "PIN_LCD_DC": "DC_IRQ", "PIN_DWM_IRQ": "DC_IRQ",
           "PIN_LCD_RST": "RST_SHARED", "PIN_DWM_RST": "RST_SHARED", "PIN_LCD_BL": "LCD_BL_CTL",
-          "PIN_BTN_UP": "BTN_UP", "PIN_BTN_DOWN": "BTN_DOWN", "PIN_BTN_OK": "BTN_OK", "PIN_BTN_BACK": "BTN_BACK",
-          "PIN_BTN_MODE": "BTN_MODE", "PIN_BUZZER": "BUZZER", "PIN_LED_R": "LED_R", "PIN_LED_G": "LED_G", "PIN_LED_B": "LED_B",
+          "PIN_BTN_UP": "BTN_UP", "PIN_BTN_DOWN": "BTN_DOWN", "PIN_BTN_OK": "BTN_OK", "PIN_BUZZER": "BUZZER", "PIN_LED_R": "LED_R", "PIN_LED_G": "LED_G", "PIN_LED_B": "LED_B",
           "PIN_CHG_N": "CHG_N", "PIN_HEAD_EN": "HEAD_EN", "PIN_HEADA_TX": "HEADA_TX", "PIN_HEADA_RX": "HEADA_RX",
           "PIN_HEADB_TX": "HEADB_TX", "PIN_HEADB_RX": "HEADB_RX", "PIN_HEAD_ID": "HEAD_ID"}
 assert set(expect) == set(defs), set(defs) ^ set(expect)

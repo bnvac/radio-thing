@@ -35,8 +35,9 @@ FIXED = {
     "SW2": (30.0, 26.0, 0), "SW3": (36.5, 26.0, 0),   # RESET / BOOT
     "J5": (37.0, 39.0, 0),      # debug UART header
     "H1": (3.5, 3.5, 0), "H2": (W - 3.5, 3.5, 0), "H3": (3.5, H_MAIN - 3.5, 0), "H4": (W - 3.5, H_MAIN - 3.5, 0),
-    # button tab: 5 x 12 mm buttons on 16.2 mm pitch
-    "SW4": (8.5, 61.0, 0), "SW5": (24.75, 61.0, 0), "SW6": (41.0, 61.0, 0), "SW7": (57.25, 61.0, 0), "SW8": (73.5, 61.0, 0),
+    # button tab: 3 x 12 mm buttons, centred right under the screen (UP | OK | DOWN, 20 mm pitch).
+    # Assumes the display module is centred on the main area; its lower edge lands ~2.5 mm into the tab.
+    "SW4": (21.0, 61.0, 0), "SW6": (41.0, 61.0, 0), "SW5": (61.0, 61.0, 0),
 }
 
 # Remaining parts are shelf-packed into these regions (x0, y0, x1, y1), by block.

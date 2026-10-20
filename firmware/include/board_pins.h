@@ -2,6 +2,7 @@
 // Single source of truth shared with hardware/PINMAP.md and hardware/gen_schematic.py.
 // Same PCB for POD and DISPLAY builds; pins marked [POD]/[DISP] are only populated in that build.
 // Unavailable on N8R8: GPIO26-32 (flash), GPIO35-37 (octal PSRAM). Strapping: GPIO0, 3, 45, 46 (left unused except BOOT).
+// Spare: GPIO7, GPIO15 (routed to test pads TP1/TP2).
 #pragma once
 
 // --- Boot / USB / debug ---
@@ -26,12 +27,14 @@
 #define PIN_DWM_RST    14   // [POD]
 #define PIN_LCD_BL     21   // [DISP] backlight enable, PWM-capable (high = on)
 
-// --- Buttons (active low, use INPUT_PULLUP) ---
+// --- Buttons (active low, use INPUT_PULLUP). 3 buttons, centred under the screen ---
+//   UP:   short = up / zoom in        hold 1.5 s = cycle mode
+//   OK:   short = select / menu       hold 1.5 s = back (map: next pod)   hold 3 s = sleep
+//   DOWN: short = down / zoom out
 #define PIN_BTN_UP      4   // [DISP]
 #define PIN_BTN_DOWN    5   // [DISP]
 #define PIN_BTN_OK      6   // [DISP]+[POD] RTC GPIO -> deep-sleep wake; the pod's single button
-#define PIN_BTN_BACK    7   // [DISP]
-#define PIN_BTN_MODE   15   // [DISP]
+// GPIO7 and GPIO15 are free (were BACK/MODE in the 5-button draft).
 
 // --- Indicators ---
 #define PIN_BUZZER     16   // [DISP] low-side MOSFET, drive with LEDC PWM (~2.7 kHz)

@@ -20,10 +20,13 @@ public:
 
     bool pressed() const { return stable_; }
 
+    // Duration of the most recent completed press (valid after SHORT_PRESS).
+    uint32_t last_hold_ms() const { return last_hold_ms_; }
+
 private:
     uint32_t debounce_ms_, long_ms_;
     bool raw_ = false, stable_ = false, long_fired_ = false;
-    uint32_t raw_since_ = 0, press_start_ = 0;
+    uint32_t raw_since_ = 0, press_start_ = 0, last_hold_ms_ = 0;
 };
 
 }  // namespace rt

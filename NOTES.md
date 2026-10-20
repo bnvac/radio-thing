@@ -41,3 +41,9 @@
 * **Decisions/Changes**: Built rev A. hardware/design.py is the circuit source -> generated KiCad 9 schematic/PCB (82x50 main + 22 mm snap-off button tab, 4-layer, GND In1/In2). Substitutes: TPS61202 (5 V), ISM330DHCX+LIS2MDL, custom MAX17048 symbol, Alps SKRK reset/boot, KCG0601 buzzer. Firmware: PlatformIO, espressif32@6.10.0, LovyanGFX 1.2.33, core libs pure C++ with 55 Unity tests; ESP-NOW data packet 'RT' + command packet 'RC' with CRC16.
 * **Known Bugs/Gaps**: PCB unrouted. Datasheet-verify list in hardware/README.md (BQ24074 TMR/ITERM, TPS61202 PS, MAX17048 pinout, DWM3000 wiring, display header position). IMU/MAX17048 registers unverified; UWB driver/breathing/wall calibration stubbed; no hardware test yet. All GPIOs used.
 <!-- MEMORY_UPDATE_END -->
+
+<!-- MEMORY_UPDATE_START -->
+### Update: 2026-10-20
+* **Decisions/Changes**: Display controls cut to 3 buttons (UP/OK/DOWN), centred under the screen at 20 mm pitch on the tab. Holds: UP 1.5 s = mode, OK 1.5 s = back, OK 3 s = sleep. Debouncer gained last_hold_ms() (+1 test, 56 total). GPIO7/15 freed to test pads TP1/TP2.
+* **Known Bugs/Gaps**: Button positions assume the display module is centred over the main area; confirm with the real module. PCB still unrouted.
+<!-- MEMORY_UPDATE_END -->

@@ -7300,6 +7300,113 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Connector:TestPoint"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0.762)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "TP"
+				(at 0 6.858 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "TestPoint"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 5.08 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "test point"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "test point tp"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "Pin* Test*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "TestPoint_0_1"
+				(circle
+					(center 0 3.302)
+					(radius 0.762)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "TestPoint_1_1"
+				(pin passive line
+					(at 0 0 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Device:Buzzer"
 			(pin_names
 				(offset 0.0254)
@@ -13175,7 +13282,7 @@
 		)
 		(uuid "a3537691-1b22-0d5f-da8c-eb650bb0c4ed")
 	)
-	(label "BTN_BACK"
+	(label "SPARE_IO7"
 		(at 210.82 68.58 180)
 		(fields_autoplaced yes)
 		(effects
@@ -13263,7 +13370,7 @@
 		)
 		(uuid "59326f98-d6f6-37e4-8510-739db0cf79f6")
 	)
-	(label "BTN_MODE"
+	(label "SPARE_IO15"
 		(at 210.82 88.9 180)
 		(fields_autoplaced yes)
 		(effects
@@ -16816,6 +16923,15 @@
 				(hide yes)
 			)
 		)
+		(property "Note" "short = up/zoom in, hold = cycle mode"
+			(at 408.94 198.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "7bc0d200-fc18-728f-3710-f6bcc98a9252")
 		)
@@ -16862,8 +16978,8 @@
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "dc298a12-c6e4-2fd8-ff78-7d94510c69f7")
-		(property "Reference" "SW5"
+		(uuid "1169dadf-2a6e-2cbc-5288-6e5c73a22165")
+		(property "Reference" "SW6"
 			(at 410.21 208.28 0.0)
 			(effects
 				(font
@@ -16871,7 +16987,7 @@
 				)
 			)
 		)
-		(property "Value" "DOWN"
+		(property "Value" "OK"
 			(at 408.94 212.344 0.0)
 			(effects
 				(font
@@ -16906,7 +17022,16 @@
 				(hide yes)
 			)
 		)
-		(property "Variant" "DISP"
+		(property "Variant" "BOTH"
+			(at 408.94 210.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Note" "Fitted on both builds; pod's only button; deep-sleep wake. Hold 1.5 s = back, 3 s = sleep"
 			(at 408.94 210.82 0)
 			(effects
 				(font
@@ -16916,21 +17041,21 @@
 			)
 		)
 		(pin "1"
-			(uuid "9a8f260c-b8f6-1ec2-114d-4df422c9636e")
+			(uuid "27c7497c-31fb-3bba-fa13-bd7b4be2ebdf")
 		)
 		(pin "2"
-			(uuid "60c3ea40-1ed2-cf52-f053-9dce442ba45f")
+			(uuid "6a7fea0f-a60d-52b2-dd86-e886e9df2f75")
 		)
 		(instances
 			(project "radio-thing"
 				(path "/95b886be-7bb8-bf84-ce35-c7d9b1fe507a"
-					(reference "SW5")
+					(reference "SW6")
 					(unit 1)
 				)
 			)
 		)
 	)
-	(label "BTN_DOWN"
+	(label "BTN_OK"
 		(at 403.86 210.82 180)
 		(fields_autoplaced yes)
 		(effects
@@ -16939,7 +17064,7 @@
 			)
 			(justify right bottom)
 		)
-		(uuid "d51ec8a8-4225-9db8-0816-db4963493e85")
+		(uuid "e7ced530-1880-fc8a-750c-7e6aafdebd61")
 	)
 	(label "GND"
 		(at 414.02 210.82 0)
@@ -16950,7 +17075,7 @@
 			)
 			(justify left bottom)
 		)
-		(uuid "85bf69b6-c828-9cd0-b4af-6aa2b716907b")
+		(uuid "62b91fef-3b1b-d50a-fa09-f0b7cbaa74c3")
 	)
 	(symbol
 		(lib_id "Switch:SW_Push")
@@ -16961,8 +17086,8 @@
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "1169dadf-2a6e-2cbc-5288-6e5c73a22165")
-		(property "Reference" "SW6"
+		(uuid "dc298a12-c6e4-2fd8-ff78-7d94510c69f7")
+		(property "Reference" "SW5"
 			(at 410.21 220.98 0.0)
 			(effects
 				(font
@@ -16970,7 +17095,7 @@
 				)
 			)
 		)
-		(property "Value" "OK"
+		(property "Value" "DOWN"
 			(at 408.94 225.044 0.0)
 			(effects
 				(font
@@ -17005,7 +17130,7 @@
 				(hide yes)
 			)
 		)
-		(property "Variant" "BOTH"
+		(property "Variant" "DISP"
 			(at 408.94 223.52 0)
 			(effects
 				(font
@@ -17014,7 +17139,7 @@
 				(hide yes)
 			)
 		)
-		(property "Note" "Fitted on both builds; pod's only button; deep-sleep wake"
+		(property "Note" "short = down/zoom out"
 			(at 408.94 223.52 0)
 			(effects
 				(font
@@ -17024,21 +17149,21 @@
 			)
 		)
 		(pin "1"
-			(uuid "27c7497c-31fb-3bba-fa13-bd7b4be2ebdf")
+			(uuid "9a8f260c-b8f6-1ec2-114d-4df422c9636e")
 		)
 		(pin "2"
-			(uuid "6a7fea0f-a60d-52b2-dd86-e886e9df2f75")
+			(uuid "60c3ea40-1ed2-cf52-f053-9dce442ba45f")
 		)
 		(instances
 			(project "radio-thing"
 				(path "/95b886be-7bb8-bf84-ce35-c7d9b1fe507a"
-					(reference "SW6")
+					(reference "SW5")
 					(unit 1)
 				)
 			)
 		)
 	)
-	(label "BTN_OK"
+	(label "BTN_DOWN"
 		(at 403.86 223.52 180)
 		(fields_autoplaced yes)
 		(effects
@@ -17047,7 +17172,7 @@
 			)
 			(justify right bottom)
 		)
-		(uuid "e7ced530-1880-fc8a-750c-7e6aafdebd61")
+		(uuid "d51ec8a8-4225-9db8-0816-db4963493e85")
 	)
 	(label "GND"
 		(at 414.02 223.52 0)
@@ -17058,53 +17183,35 @@
 			)
 			(justify left bottom)
 		)
-		(uuid "62b91fef-3b1b-d50a-fa09-f0b7cbaa74c3")
+		(uuid "85bf69b6-c828-9cd0-b4af-6aa2b716907b")
 	)
 	(symbol
-		(lib_id "Switch:SW_Push")
-		(at 408.94 236.22 0)
+		(lib_id "Connector:TestPoint")
+		(at 403.86 236.22 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "05d06c7c-87ee-c7a2-2187-a892baea7e2d")
-		(property "Reference" "SW7"
-			(at 410.21 233.68 0.0)
+		(uuid "e8ff9b21-02f7-3b5a-adce-65860e5c084b")
+		(property "Reference" "TP1"
+			(at 403.86 229.362 0.0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "BACK"
-			(at 408.94 237.744 0.0)
+		(property "Value" "IO7"
+			(at 403.86 231.14 0.0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_THT:SW_PUSH-12mm"
-			(at 408.94 231.14 0.0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 408.94 231.14 0.0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Push button switch, generic, two pins"
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 408.94 236.22 0.0)
 			(effects
 				(font
@@ -17113,8 +17220,35 @@
 				(hide yes)
 			)
 		)
-		(property "Variant" "DISP"
-			(at 408.94 236.22 0)
+		(property "Datasheet" "~"
+			(at 408.94 236.22 0.0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "test point"
+			(at 403.86 236.22 0.0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Variant" "BOTH"
+			(at 403.86 236.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Note" "spare GPIO7"
+			(at 403.86 236.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17123,22 +17257,19 @@
 			)
 		)
 		(pin "1"
-			(uuid "688ced65-2050-d81c-4f5f-d822cb1f37a6")
-		)
-		(pin "2"
-			(uuid "2eb6ef09-ad6f-abe6-e650-b8c93e45cf62")
+			(uuid "3ad6f667-fba7-4d48-884e-1434ab40ec28")
 		)
 		(instances
 			(project "radio-thing"
 				(path "/95b886be-7bb8-bf84-ce35-c7d9b1fe507a"
-					(reference "SW7")
+					(reference "TP1")
 					(unit 1)
 				)
 			)
 		)
 	)
-	(label "BTN_BACK"
-		(at 403.86 236.22 180)
+	(label "SPARE_IO7"
+		(at 403.86 236.22 270)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -17146,64 +17277,35 @@
 			)
 			(justify right bottom)
 		)
-		(uuid "f99d63ab-01bd-acc3-4a24-7637272e42d9")
-	)
-	(label "GND"
-		(at 414.02 236.22 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.0 1.0)
-			)
-			(justify left bottom)
-		)
-		(uuid "8f75ae23-d7ca-a46c-912b-0dcabbcadb3b")
+		(uuid "d3e2fe28-7627-b802-e1b6-6892619a1e13")
 	)
 	(symbol
-		(lib_id "Switch:SW_Push")
-		(at 408.94 248.92 0)
+		(lib_id "Connector:TestPoint")
+		(at 403.86 248.92 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "9dd82bff-33db-0d1a-1d17-ce900ca2a79b")
-		(property "Reference" "SW8"
-			(at 410.21 246.38 0.0)
+		(uuid "9b4712ac-33b9-9cc2-3cbe-657e3110cea7")
+		(property "Reference" "TP2"
+			(at 403.86 242.062 0.0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "MODE"
-			(at 408.94 250.444 0.0)
+		(property "Value" "IO15"
+			(at 403.86 243.84 0.0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" "Button_Switch_THT:SW_PUSH-12mm"
-			(at 408.94 243.84 0.0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 408.94 243.84 0.0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Push button switch, generic, two pins"
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
 			(at 408.94 248.92 0.0)
 			(effects
 				(font
@@ -17212,8 +17314,35 @@
 				(hide yes)
 			)
 		)
-		(property "Variant" "DISP"
-			(at 408.94 248.92 0)
+		(property "Datasheet" "~"
+			(at 408.94 248.92 0.0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "test point"
+			(at 403.86 248.92 0.0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Variant" "BOTH"
+			(at 403.86 248.92 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Note" "spare GPIO15"
+			(at 403.86 248.92 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17222,22 +17351,19 @@
 			)
 		)
 		(pin "1"
-			(uuid "239633b3-e8ee-c2e5-07a1-485da0773fd3")
-		)
-		(pin "2"
-			(uuid "b7abd106-bbf3-712a-bc81-ee9abbef4de2")
+			(uuid "a357a594-6904-cb78-6e60-0e40c40aea3a")
 		)
 		(instances
 			(project "radio-thing"
 				(path "/95b886be-7bb8-bf84-ce35-c7d9b1fe507a"
-					(reference "SW8")
+					(reference "TP2")
 					(unit 1)
 				)
 			)
 		)
 	)
-	(label "BTN_MODE"
-		(at 403.86 248.92 180)
+	(label "SPARE_IO15"
+		(at 403.86 248.92 270)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -17245,18 +17371,7 @@
 			)
 			(justify right bottom)
 		)
-		(uuid "f531be03-51a3-67b5-7919-9809ba5f1edb")
-	)
-	(label "GND"
-		(at 414.02 248.92 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.0 1.0)
-			)
-			(justify left bottom)
-		)
-		(uuid "245a8d60-8ab6-8b8c-f5b8-6b89df209d3e")
+		(uuid "b6b3192a-f128-4068-b83a-4d07ace26169")
 	)
 	(symbol
 		(lib_id "Device:Buzzer")

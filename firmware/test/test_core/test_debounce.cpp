@@ -87,7 +87,20 @@ static void test_two_presses() {
     EQ_EV(ButtonEvent::SHORT_PRESS, run(d, false, 300, 400));
 }
 
+// OK button: release between 1.5 s and 3 s is still a SHORT_PRESS, and the hold time
+// tells the caller to treat it as BACK.
+static void test_last_hold_ms_reports_press_length() {
+    Debouncer d(25, 3000);
+    run(d, true, 0, 2000);
+    EQ_EV(ButtonEvent::SHORT_PRESS, run(d, false, 2000, 2100));
+    TEST_ASSERT_UINT32_WITHIN(2, 2000, d.last_hold_ms());
+    run(d, true, 3000, 3200);
+    EQ_EV(ButtonEvent::SHORT_PRESS, run(d, false, 3200, 3300));
+    TEST_ASSERT_UINT32_WITHIN(2, 200, d.last_hold_ms());
+}
+
 void run_debounce_tests() {
+    RUN_TEST(test_last_hold_ms_reports_press_length);
     RUN_TEST(test_short_press);
     RUN_TEST(test_bounce_is_ignored);
     RUN_TEST(test_debounce_boundary);

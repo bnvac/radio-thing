@@ -115,7 +115,7 @@ PARTS = [
        "12": "I2C_SDA", "11": "I2C_SCL",
        "20": "SPI_SCK", "19": "SPI_MOSI", "21": "SPI_MISO", "18": "SPI_CS", "17": "DC_IRQ", "22": "RST_SHARED",
        "23": "LCD_BL_CTL",
-       "4": "BTN_UP", "5": "BTN_DOWN", "6": "BTN_OK", "7": "BTN_BACK", "8": "BTN_MODE",
+       "4": "BTN_UP", "5": "BTN_DOWN", "6": "BTN_OK", "7": "SPARE_IO7", "8": "SPARE_IO15",
        "9": "BUZZER", "31": "LED_R", "24": "LED_G", "25": "LED_B", "10": "CHG_N",
        "34": "HEAD_EN", "32": "HEADA_TX", "33": "HEADA_RX", "35": "HEADB_TX", "38": "HEADB_RX", "39": "HEAD_ID",
        "15": NC, "16": NC, "26": NC, "28": NC, "29": NC, "30": NC}, "MCU",
@@ -166,13 +166,15 @@ PARTS = [
     C("C22", "10u", "+3V3", "GND", "UWB", C0805, "OPT"),
     C("C23", "100n", "+3V3", "GND", "UWB", variant="OPT"),
 
-    # ------------------------------------------------------------------ Buttons (active low, internal pull-ups)
-    P("SW4", "Switch:SW_Push", "UP", "Button_Switch_THT:SW_PUSH-12mm", {"1": "BTN_UP", "2": "GND"}, "UI", "DISP"),
-    P("SW5", "Switch:SW_Push", "DOWN", "Button_Switch_THT:SW_PUSH-12mm", {"1": "BTN_DOWN", "2": "GND"}, "UI", "DISP"),
+    # ------------------------------------------------------------------ Buttons: 3, centred under the screen (active low)
+    P("SW4", "Switch:SW_Push", "UP", "Button_Switch_THT:SW_PUSH-12mm", {"1": "BTN_UP", "2": "GND"}, "UI", "DISP",
+      note="short = up/zoom in, hold = cycle mode"),
     P("SW6", "Switch:SW_Push", "OK", "Button_Switch_THT:SW_PUSH-12mm", {"1": "BTN_OK", "2": "GND"}, "UI",
-      note="Fitted on both builds; pod's only button; deep-sleep wake"),
-    P("SW7", "Switch:SW_Push", "BACK", "Button_Switch_THT:SW_PUSH-12mm", {"1": "BTN_BACK", "2": "GND"}, "UI", "DISP"),
-    P("SW8", "Switch:SW_Push", "MODE", "Button_Switch_THT:SW_PUSH-12mm", {"1": "BTN_MODE", "2": "GND"}, "UI", "DISP"),
+      note="Fitted on both builds; pod's only button; deep-sleep wake. Hold 1.5 s = back, 3 s = sleep"),
+    P("SW5", "Switch:SW_Push", "DOWN", "Button_Switch_THT:SW_PUSH-12mm", {"1": "BTN_DOWN", "2": "GND"}, "UI", "DISP",
+      note="short = down/zoom out"),
+    P("TP1", "Connector:TestPoint", "IO7", "TestPoint:TestPoint_Pad_D1.5mm", {"1": "SPARE_IO7"}, "UI", note="spare GPIO7"),
+    P("TP2", "Connector:TestPoint", "IO15", "TestPoint:TestPoint_Pad_D1.5mm", {"1": "SPARE_IO15"}, "UI", note="spare GPIO15"),
 
     # ------------------------------------------------------------------ Buzzer + LEDs
     P("BZ1", "Device:Buzzer", "Magnetic 3V 6mm", "Buzzer_Beeper:MagneticBuzzer_Kingstate_KCG0601",

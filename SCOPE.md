@@ -465,3 +465,14 @@ Same PCB, with different parts fitted. That's cheaper to fab and only one design
   - `pod` and `display` builds compile; 55/55 host unit tests pass.
   - LD2450 SCAN path, ESP-NOW protocol, tracker, menus and buttons are done. The UWB head driver, breathing detection and wall calibration are stubbed.
   - Not yet run on real hardware. See `firmware/README.md`.
+
+### Update (2026-10-20): 3 buttons, under the screen
+Replaces the 5-button layout in §14. Three 12 mm buttons sit on the tab directly below the screen:
+
+| Button | Short press | Hold |
+|---|---|---|
+| **UP** | up / zoom in | 1.5 s: cycle SCAN → LISTEN → MULTI |
+| **OK** | select / open menu | 1.5 s: back (on map: next pod) · 3 s: sleep |
+| **DOWN** | down / zoom out | — |
+
+GPIO7 and GPIO15 are now spare (test pads TP1/TP2).

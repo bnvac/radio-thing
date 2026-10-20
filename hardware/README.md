@@ -3,7 +3,7 @@
 One PCB for both builds:
 
 - **POD:** 82 × 50 mm. Snap off the button tab along the V-score.
-- **DISPLAY:** 82 × 72 mm. Keeps the tab with 5 buttons.
+- **DISPLAY:** 82 × 72 mm. Keeps the tab with 3 buttons (UP · OK · DOWN) centred right under the screen.
 
 ![board front](board-front.png)
 
@@ -48,7 +48,7 @@ USB-C ─ F1 ─ U1 ESD ─┬─ VBUS ─ U2 BQ24074 (power path, ~1 A in, 445 
 U6 ── I2C ── U7 ISM330DHCX (IMU) + U8 LIS2MDL (compass) + U3
 U6 ── SPI ── J3 ST7796 3.5" display [DISP]  |  U9 DWM3000 UWB ranging [OPT, POD]
 U6 ── UART1/UART2 + HEAD_ID + HEAD_EN ── J4 JST-GH 10p radar head [POD]
-U6 ── 5 buttons [DISP] / OK button [both], RGB LED, buzzer
+U6 ── 3 buttons UP/OK/DOWN [DISP] (OK on both builds), RGB LED, buzzer
 ```
 
 ## Build variants
@@ -57,7 +57,7 @@ U6 ── 5 buttons [DISP] / OK button [both], RGB LED, buzzer
 |---|---|---|
 | BOTH | every board | USB-C, charger, fuel gauge, 3V3, ESP32, sensors, LED, OK button |
 | POD | pod | 5 V boost + filter, radar head connector J4, head ID |
-| DISP | display | display socket + backlight switch, 4 extra buttons, buzzer. Change **R7 to 1k** for ~890 mA charging of a 2000 mAh cell. |
+| DISP | display | display socket + backlight switch, UP and DOWN buttons, buzzer. Change **R7 to 1k** for ~890 mA charging of a 2000 mAh cell. |
 | OPT | not fitted by default | DWM3000 pod-to-pod ranging (shares SPI with the display, so never fit both) |
 
 ## Pin map (ESP32-S3-WROOM-1U-N8R8)
@@ -66,20 +66,22 @@ Defined in `firmware/include/board_pins.h`, the single source of truth, and chec
 
 | GPIO | Net | GPIO | Net |
 |---|---|---|---|
-| 0 | BOOT | 15 | BTN_MODE |
+| 0 | BOOT | 15 | spare (TP2) |
 | 1 | HEAD_ID (ADC) | 16 | BUZZER |
 | 2 | HEADB_RX | 17 | CHG_N |
 | 4 | BTN_UP | 18 | I2C_SCL |
 | 5 | BTN_DOWN | 19/20 | USB D-/D+ |
 | 6 | BTN_OK (wake) | 21 | LCD_BL |
-| 7 | BTN_BACK | 38/47/48 | LED R/G/B |
+| 7 | spare (TP1) | 38/47/48 | LED R/G/B |
 | 8 | I2C_SDA | 39/40 | HEADA TX/RX |
 | 9 | LCD_DC / DWM_IRQ | 41 | HEAD_EN |
 | 10 | SPI_CS | 42 | HEADB_TX |
 | 11/12/13 | MOSI/SCK/MISO | 43/44 | debug UART |
 | 14 | LCD_RST / DWM_RST | 3, 45, 46, 35–37 | unused (strapping / PSRAM) |
 
-All usable GPIOs are taken. A rev B would need an I/O expander for more inputs, such as IMU interrupts or touch.
+GPIO7 and GPIO15 are spare (test pads TP1/TP2), e.g. for an IMU interrupt or touch later.
+
+**Buttons (3, under the screen):** UP short = up/zoom in, hold = cycle mode · OK short = select/menu, hold 1.5 s = back (map: next pod), hold 3 s = sleep · DOWN short = down/zoom out. Button positions assume the display module is centred over the main area; check against your module.
 
 ## Verify before ordering ⚠
 
