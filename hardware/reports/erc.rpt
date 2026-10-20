@@ -1,14 +1,14 @@
-ERC report (2026-10-20T15:05:52+0000, Encoding UTF8)
+ERC report (2026-10-20T18:23:30+0000, Encoding UTF8)
 Report includes: Errors, Warnings, Exclusions
 
 ***** Sheet /
 [pin_to_pin]: Pins of type Bidirectional and Power output are connected
     ; warning
     @(320.04 mm, 88.90 mm): Symbol U7 Pin 2 [SDx, Bidirectional, Line]
-    @(25.40 mm, 12.70 mm): Symbol #FLG01 Pin 1 [Power output, Line]
+    @(45.72 mm, 12.70 mm): Symbol #FLG02 Pin 1 [Power output, Line]
 [pin_to_pin]: Pins of type Bidirectional and Power output are connected
     ; warning
-    @(299.72 mm, 284.48 mm): Symbol U9 Pin 2 [WAKEUP, Bidirectional, Line]
-    @(25.40 mm, 12.70 mm): Symbol #FLG01 Pin 1 [Power output, Line]
+    @(299.72 mm, 299.72 mm): Symbol U9 Pin 2 [WAKEUP, Bidirectional, Line]
+    @(45.72 mm, 12.70 mm): Symbol #FLG02 Pin 1 [Power output, Line]
 
  ** ERC messages: 2  Errors 0  Warnings 2

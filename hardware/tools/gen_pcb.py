@@ -35,6 +35,7 @@ FIXED = {
     "SW2": (30.0, 26.0, 0), "SW3": (36.5, 26.0, 0),   # RESET / BOOT
     "J5": (37.0, 39.0, 0),      # debug UART header
     "H1": (3.5, 3.5, 0), "H2": (W - 3.5, 3.5, 0), "H3": (3.5, H_MAIN - 3.5, 0), "H4": (W - 3.5, H_MAIN - 3.5, 0),
+    "H5": (3.5, H_MAIN + H_TAB - 3.5, 0), "H6": (W - 3.5, H_MAIN + H_TAB - 3.5, 0),   # tab support
     # button tab: 3 x 12 mm buttons, centred right under the screen (UP | OK | DOWN, 20 mm pitch).
     # Assumes the display module is centred on the main area; its lower edge lands ~2.5 mm into the tab.
     "SW4": (21.0, 61.0, 0), "SW6": (41.0, 61.0, 0), "SW5": (61.0, 61.0, 0),
@@ -149,8 +150,8 @@ def main():
                 problems.append(f"{p.ref} pad {num} has no pin in design (left unconnected)")
         placed.append(p.ref)
 
-    # inner ground planes: In1 = GND, In2 = GND (route power on outer layers / pours)
-    for layer, prio in ((pcbnew.In1_Cu, 0), (pcbnew.In2_Cu, 0)):
+    # stackup: F.Cu signals/parts | In1 solid GND reference | In2 power + signals | B.Cu signals
+    for layer, prio in ((pcbnew.In1_Cu, 0),):
         z = pcbnew.ZONE(board)
         z.SetLayer(layer); z.SetNet(nets["/GND"]); z.SetAssignedPriority(prio)
         z.SetLocalClearance(MM(0.3)); z.SetMinThickness(MM(0.2))
@@ -182,7 +183,7 @@ def apply_project_rules(pro):
     power = dict(default, name="Power", clearance=0.127, track_width=0.5, via_diameter=0.8, via_drill=0.4, priority=0)
     ns["classes"] = [default, power]
     ns["netclass_patterns"] = [{"netclass": "Power", "pattern": pat} for pat in
-                               ("/VBUS*", "/VSYS", "/VBAT", "/+3V3", "/+5V*", "/BB_L*", "/HB_L", "/GND")]
+                               ("/VBUS*", "/VSYS", "/VBAT", "/+3V3", "/+5V*", "/BB_L*", "/HB_L", "/GND", "/PWR_EN")]
     json.dump(d, open(pro, "w"), indent=2)
 
 

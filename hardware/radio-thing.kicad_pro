@@ -309,6 +309,10 @@
       {
         "netclass": "Power",
         "pattern": "/GND"
+      },
+      {
+        "netclass": "Power",
+        "pattern": "/PWR_EN"
       }
     ]
   },
