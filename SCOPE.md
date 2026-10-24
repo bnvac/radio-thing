@@ -481,3 +481,6 @@ GPIO7 and GPIO15 are now spare (test pads TP1/TP2).
 - Rev A board fully routed (4 layers, 0 unconnected, 0 electrical DRC errors, matches schematic). Manufacturing files are in `hardware/fab/`.
 - The button-tab break line is now **routed slots + bridges**, not a V-score. A V-cut would sever the button traces.
 - The optional DWM3000 pod-to-pod ranging footprint moved to rev B (its antenna keep-out blocked routing).
+
+### Update (2026-10-24 b): display enclosure
+3D-printable display enclosure + button caps in `enclosure/` (OpenSCAD, STLs included). The screen connects to the board with a short ribbon so it can sit centred; the buttons on the PCB were moved to match. Next steps for the builder: `BUILD-GUIDE.md`.

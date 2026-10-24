@@ -16,7 +16,7 @@ One PCB for both builds:
 | Schematic | ✅ Generated, KiCad ERC: 1 warning (unused IMU aux pin tied to GND, expected) |
 | Netlist | ✅ 304 pin assignments verified against `design.py`, 30 MCU pins verified against `firmware/include/board_pins.h` |
 | PCB placement | ✅ Power stages and sensors placed tight around their IC pins; every pad on its net. |
-| PCB routing | ✅ **Fully routed** (2-pass Freerouting + fixed USB-C pattern): 938 track segments, 108 vias. DRC: **0 unconnected, 0 electrical errors, 0 schematic-parity issues**. 6 silkscreen-at-edge warnings remain, all expected (USB-C and the power switch overhang the edge by design). |
+| PCB routing | ✅ **Fully routed** (multi-pass Freerouting + fixed USB-C and U3 ground patterns): 932 track segments, 107 vias. DRC: **0 unconnected, 0 electrical errors, 0 schematic-parity issues**. 6 silkscreen-at-edge warnings remain, all expected (USB-C and the power switch overhang the edge by design). |
 | Manufacturing files | ✅ `fab/`: Gerbers + drill (zip), and BOM + placement (CPL) for each build |
 | Datasheet checks | ✅ Done 2026-10-20. 13 fixes applied; 5 items need the real parts in hand (see below). |
 
@@ -30,7 +30,7 @@ One PCB for both builds:
 | `tools/gen_schematic.py` | Generates `radio-thing.kicad_sch` + `radio-thing.kicad_sym` (custom MAX17048 symbol). Pins come from KiCad's own symbol library, so pin numbers aren't hand-typed. |
 | `tools/check_netlist.py` | Checks KiCad's exported netlist against `design.py` and the firmware pin map |
 | `tools/gen_pcb.py` | Generates the placed board: outline with break-off slots, 4 layers (In1 = solid GND), cluster placement around each IC, edge keep-outs, the fixed USB-C pattern, nets from the netlist |
-| `route.sh` | Autoroutes the placed board (Freerouting 1.9.0, two passes), adds GND pours on top/bottom, fills, runs DRC |
+| `route.sh` | Autoroutes the placed board (Freerouting 1.9.0, up to three passes), adds GND pours on top/bottom, fills, runs DRC |
 | `tools/finish_pcb.py`, `tools/silk_cleanup.py` | Route import, pours, fill, silkscreen tidy-up, place/drill origin |
 | `tools/fab_outputs.py` | Writes `fab/`: Gerber+drill zip, `bom-POD.csv`, `bom-DISPLAY.csv`, `cpl-POD.csv`, `cpl-DISPLAY.csv` (JLCPCB column format) |
 | `build.sh` | Regenerates schematic + placed board, runs ERC, netlist check, DRC, BOM, PDF |
@@ -93,7 +93,7 @@ Defined in `firmware/include/board_pins.h`, the single source of truth, and chec
 
 GPIO7 and GPIO15 are spare (test pads TP1/TP2), e.g. for an IMU interrupt or touch later.
 
-**Buttons (3, under the screen):** UP short = up/zoom in, hold = cycle mode · OK short = select/menu, hold 1.5 s = back (map: next pod), hold 3 s = sleep · DOWN short = down/zoom out. Button positions assume the display module is centred over the main area; check against your module.
+**Buttons (3, under the screen):** UP short = up/zoom in, hold = cycle mode · OK short = select/menu, hold 1.5 s = back (map: next pod), hold 3 s = sleep · DOWN short = down/zoom out. The buttons are centred on board x = 48.8 mm, which is the centre line of the enclosure. The 98 mm screen is centred in the case and connects to J3 with a short 14-wire ribbon (see `../enclosure/README.md`).
 
 ## Datasheet check (2026-10-20)
 
@@ -143,7 +143,7 @@ Every value that came from memory was checked against the manufacturer datasheet
 - **Power stages:** each converter's inductor and input/output capacitors sit directly at the IC pins (placed by `gen_pcb.py` around U2/U4/U5), so the switching loops are short.
 - **USB:** D+/D- are full-speed (12 Mbit/s), so no controlled impedance is needed. The two orientation pin pairs on the USB-C connector are joined with a fixed pattern (D- loop on top, D+ jumper on the bottom via two vias).
 - **Edges:** tracks and vias stay at least 0.35 mm from every edge and slot.
-- **Break-off tab:** 4 routed slots (1.5 mm wide) with 5 bridges. The button traces cross through the bridges, so the DISPLAY build keeps them intact. For the POD build, cut the bridges.
+- **Break-off tab:** 4 routed slots (1.5 mm wide) with 5 bridges (three 6–7 mm bridges in the middle carry the button traces). The button traces cross through the bridges, so the DISPLAY build keeps them intact. For the POD build, cut the bridges.
 
 ## Review before ordering
 

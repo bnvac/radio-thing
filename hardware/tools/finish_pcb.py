@@ -37,6 +37,19 @@ def main(src, ses, out):
         raise SystemExit("SES import failed")
 
     gnd = board.FindNet("/GND")
+
+    # MAX17048 pin 1 (CTG -> GND) is boxed in by its neighbours: tie it to the exposed pad right next to it
+    u3 = board.FindFootprintByReference("U3")
+    if u3:
+        pads = {p.GetNumber(): p.GetPosition() for p in u3.Pads()}
+        p1, ep = pads["1"], pads["9"]
+        xm = ep.x - MM(0.3) if p1.x < ep.x else ep.x + MM(0.3)
+        ym = ep.y - MM(0.5) if p1.y < ep.y else ep.y + MM(0.5)
+        for a_, b_ in [((p1.x, p1.y), (xm, p1.y)), ((xm, p1.y), (xm, ym))]:
+            t = pcbnew.PCB_TRACK(board)
+            t.SetStart(pcbnew.VECTOR2I(int(a_[0]), int(a_[1]))); t.SetEnd(pcbnew.VECTOR2I(int(b_[0]), int(b_[1])))
+            t.SetLayer(pcbnew.F_Cu); t.SetWidth(MM(0.2)); t.SetNet(gnd)
+            board.Add(t)
     bb = board.GetBoardEdgesBoundingBox()
     inset = MM(0.5)
     pts = [(bb.GetLeft() + inset, bb.GetTop() + inset), (bb.GetRight() - inset, bb.GetTop() + inset),

@@ -20,8 +20,9 @@ MM = pcbnew.FromMM
 # Break line between main board and button tab: routed slots (x0, x1) at y = H_MAIN, SLOT_W wide.
 # Gaps between slots are solid bridges; button traces cross through the bridges.
 SLOT_W = 1.5
-SLOTS = [(1.5, 24.0), (28.0, 38.5), (43.5, 54.0), (58.0, 80.5)]
-EDGE_KEEPOUT = 0.35   # no tracks/vias this close to any board edge or slot
+SLOTS = [(1.5, 23.0), (29.0, 37.5), (44.5, 53.0), (59.0, 80.5)]
+EDGE_KEEPOUT = 0.35
+BTN_CX = 48.8      # board x that sits on the enclosure centre line (keep in sync with the .scad)   # no tracks/vias this close to any board edge or slot
 
 
 def uid(*seed):
@@ -48,9 +49,11 @@ FIXED = {
     "U8": (51.0, 40.0, 0),      # LIS2MDL magnetometer
     "H1": (3.5, 3.5, 0), "H2": (W - 3.5, 3.5, 0), "H3": (3.5, H_MAIN - 3.5, 0), "H4": (W - 3.5, H_MAIN - 3.5, 0),
     "H5": (3.5, H_MAIN + H_TAB - 3.5, 0), "H6": (W - 3.5, H_MAIN + H_TAB - 3.5, 0),   # tab support
-    # button tab: 3 x 12 mm buttons, centred right under the screen (UP | OK | DOWN, 20 mm pitch).
-    # Assumes the display module is centred on the main area; its lower edge lands ~2.5 mm into the tab.
-    "SW4": (21.0, 61.0, 0), "SW6": (41.0, 61.0, 0), "SW5": (61.0, 61.0, 0),
+    # button tab: 3 x 12 mm buttons (UP | OK | DOWN, 17.5 mm pitch) centred under the screen *in the case*.
+    # The 98 mm display is wider than the board and is centred in the case, while the board sits against the
+    # case's left wall (USB-C / power switch). Case centre = board x BTN_CX (see enclosure/radio_thing_display.scad).
+    # (SW_PUSH-12mm origin is pin 1; the switch centre is +6.25, +2.5 from it -> centres at y = 61)
+    "SW4": (BTN_CX - 17.5 - 6.25, 58.5, 0), "SW6": (BTN_CX - 6.25, 58.5, 0), "SW5": (BTN_CX + 17.5 - 6.25, 58.5, 0),
 }
 
 # Parts placed tight against the IC pins they serve: ref -> (anchor ref, dx, dy). Rotation is chosen
@@ -64,7 +67,7 @@ SATELLITES = {
     "R6": ("U2", -1.5, -3.4), "R7": ("U2", -3.0, -3.2), "C2": ("U2", 3.3, 0.6), "C3": ("U2", 5.5, 0.6),
     "R4": ("U2", 3.2, -1.6), "R8": ("U2", 3.2, 2.4),
     # fuel gauge
-    "C5": ("U3", 2.6, 0.0),
+    "C5": ("U3", -2.6, 0.3),   # VDD bypass on the VDD (left) side; keeps SCL/SDA (right) free
     # 3.3 V buck-boost: inductor on the L1/L2 side, VIN cap below, VOUT caps above, VINA RC on the right
     "L1": ("U4", -4.9, 0.0), "C6": ("U4", -1.2, 3.3), "C8": ("U4", -1.4, -3.4), "C9": ("U4", 1.4, -3.4),
     "C7": ("U4", 3.3, 0.0), "R24": ("U4", 3.3, 1.8),
@@ -254,7 +257,7 @@ def main():
         shelves[p.block] = [cx + w, cy, max(rh, h)]
 
     # exposed/thermal pads of the power ICs: solid (not thermal-relief) connection to GND pours
-    for ref in ("U2", "U3", "U4", "U5"):
+    for ref in ("U2", "U3", "U4", "U5", "U7", "U8"):
         if ref in fps:
             fps[ref].SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_FULL)
 

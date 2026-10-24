@@ -1,7 +1,7 @@
 (export (version "E")
   (design
     (source "/home/user/radio-thing/hardware/radio-thing.kicad_sch")
-    (date "2026-10-24T03:50:40+0000")
+    (date "2026-10-24T18:16:35+0000")
     (tool "Eeschema 9.0.9-9.0.9~ubuntu24.04.1")
     (sheet (number "1") (name "/") (tstamps "/")
       (title_block

@@ -59,3 +59,9 @@
 * **Decisions/Changes**: Board routed. Pipeline: build.sh (schematic + cluster-placed board) -> route.sh (Freerouting 1.9.0 under xvfb, 2 passes; v2.1.0 ignores -mp and never writes SES) -> tools/fab_outputs.py (Gerber/drill zip, per-variant BOM+CPL, origin = board bottom-left). Changes: V-score replaced by routed slots + 5 bridges (V-cut cuts all copper); DWM3000 removed from rev A; power traces 0.3 mm; edge keep-outs 0.35 mm; locked USB-C orientation-join pattern; full GND connection on IC thermal pads; passive silk refs hidden. pcbnew.SaveBoard resets .kicad_pro, so apply_project_rules() runs after every save.
 * **Known Bugs/Gaps**: Routing is autorouted, so a human should review the power stages in KiCad. Open: confirm MSP3525 module/J3 + button alignment, buzzer part, MAX17048 EP land pattern, USBLC6 pinout, LD2450 connector pinout. LCSC part numbers not filled in the BOMs.
 <!-- MEMORY_UPDATE_END -->
+
+<!-- MEMORY_UPDATE_START -->
+### Update: 2026-10-24 (b)
+* **Decisions/Changes**: Display enclosure designed in OpenSCAD (enclosure/radio_thing_display.scad -> stl/: front shell, lid, 3 button caps; 103.8 x 92.3 x 33.3 mm). Screen centred in case and connected to J3 by a 14-wire ribbon; board flush to the left wall for USB-C/power switch; buttons moved on the PCB to board x 48.8 +/- 17.5 (case centre line, BTN_CX shared by gen_pcb.py and the .scad); board mounts to lid posts, screen to front bosses. Board re-routed: 932 segments/107 vias, clean DRC. Added BUILD-GUIDE.md (user to-do list). route.sh: 3rd pass with timeout + fallback; U3 pin-1 ground link added post-route; bridges widened to 6-7 mm.
+* **Known Bugs/Gaps**: Enclosure [MEASURE] values (display thickness/AA offset, switch height, battery) are defaults until real parts are measured. Pod enclosure not designed yet (waits on radar head choice).
+<!-- MEMORY_UPDATE_END -->

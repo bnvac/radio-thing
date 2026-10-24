@@ -1,8 +1,16 @@
 ** Drc report for radio-thing.kicad_pcb **
-** Created on 2026-10-24T03:56:35+0000 **
+** Created on 2026-10-24T18:24:24+0000 **
 ** Report includes: Errors, Warnings, Exclusions **
 
 ** Found 6 DRC violations **
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(100.0000 mm, 172.0000 mm): Segment on Edge.Cuts
+    @(101.5000 mm, 130.8000 mm): Segment of J1 on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(100.0000 mm, 172.0000 mm): Segment on Edge.Cuts
+    @(101.5000 mm, 140.2000 mm): Segment of J1 on F.Silkscreen
 [silk_edge_clearance]: Silkscreen clipped by board edge
     Rule: board setup constraints silk; warning
     @(100.0000 mm, 172.0000 mm): Segment on Edge.Cuts
@@ -19,14 +27,6 @@
     Rule: board setup constraints silk; warning
     @(100.0000 mm, 172.0000 mm): Segment on Edge.Cuts
     @(101.2700 mm, 110.6000 mm): Segment of SW1 on F.Silkscreen
-[silk_edge_clearance]: Silkscreen clipped by board edge
-    Rule: board setup constraints silk; warning
-    @(100.0000 mm, 172.0000 mm): Segment on Edge.Cuts
-    @(101.5000 mm, 130.8000 mm): Segment of J1 on F.Silkscreen
-[silk_edge_clearance]: Silkscreen clipped by board edge
-    Rule: board setup constraints silk; warning
-    @(100.0000 mm, 172.0000 mm): Segment on Edge.Cuts
-    @(101.5000 mm, 140.2000 mm): Segment of J1 on F.Silkscreen
 
 ** Found 0 unconnected pads **
 

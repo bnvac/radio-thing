@@ -1,7 +1,7 @@
-Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=45611 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
-2026-10-24 03:50:47.953 [main] INFO  Freerouting v1.9.0 (build-date: 2023-10-30)
-2026-10-24 03:50:48.001 [main] INFO  Settings were loaded from freerouting.json
-2026-10-24 03:50:49.023 [main] INFO  Opening '/tmp/tmp.fbR2d4f8ug/p1.dsn'...
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Djavax.net.ssl.trustStoreType=JKS -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=42869 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|api.anthropic.com|api-staging.anthropic.com|api-pr-preview.anthropic.com|mcp-proxy.anthropic.com|mcp-proxy-staging.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+2026-10-24 18:16:42.407 [main] INFO  Freerouting v1.9.0 (build-date: 2023-10-30)
+2026-10-24 18:16:42.457 [main] INFO  Settings were loaded from freerouting.json
+2026-10-24 18:16:43.488 [main] INFO  Opening '/tmp/tmp.4c9J4i38C2/p1.dsn'...
 java.util.concurrent.CompletionException: java.lang.NullPointerException: Cannot invoke "com.google.gson.JsonElement.getAsString()" because the return value of "com.google.gson.JsonObject.get(String)" is null
 	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:315)
 	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:320)
@@ -19,11 +19,11 @@ Caused by: java.lang.NullPointerException: Cannot invoke "com.google.gson.JsonEl
 	at app.freerouting.management.VersionChecker.processResponse(VersionChecker.java:39)
 	at java.base/java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:718)
 	... 9 more
-2026-10-24 03:51:10.339 [Thread-28] INFO  Starting auto-routing...
-2026-10-24 03:51:10.546 [Thread-28] WARN  FloatLine: Parameter is null
-2026-10-24 03:51:30.748 [Thread-28] WARN  There were only 14.80 changes in the last 20 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
-2026-10-24 03:51:31.819 [Thread-28] WARN  There were only 6.78 changes in the last 40 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
-2026-10-24 03:51:32.797 [Thread-28] INFO  Auto-routing was completed in 22.46 seconds.
-2026-10-24 03:51:32.899 [Thread-28] INFO  Starting route optimization on 1 thread...
-2026-10-24 03:51:47.275 [Thread-28] INFO  Route optimization was completed in 14.38 seconds.
-2026-10-24 03:51:47.295 [Thread-28] INFO  Saving '/tmp/tmp.fbR2d4f8ug/p1.ses'...
+2026-10-24 18:17:04.919 [Thread-28] INFO  Starting auto-routing...
+2026-10-24 18:17:05.109 [Thread-28] WARN  FloatLine: Parameter is null
+2026-10-24 18:17:32.845 [Thread-28] WARN  There were only 19.60 changes in the last 20 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-10-24 18:17:40.077 [Thread-28] WARN  There were only 8.00 changes in the last 40 passes, so it's very likely that autorouter can't improve the result much further. It is recommended to stop it and finish the board manually.
+2026-10-24 18:17:46.486 [Thread-28] INFO  Auto-routing was completed in 41.56 seconds.
+2026-10-24 18:17:46.588 [Thread-28] INFO  Starting route optimization on 1 thread...
+2026-10-24 18:17:59.549 [Thread-28] INFO  Route optimization was completed in 12.96 seconds.
+2026-10-24 18:17:59.566 [Thread-28] INFO  Saving '/tmp/tmp.4c9J4i38C2/p1.ses'...
