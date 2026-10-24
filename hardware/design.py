@@ -158,15 +158,8 @@ PARTS = [
     R("R15", "100", "LCD_BL_CTL", "LCD_LED", "DISPLAY", "DISP",
       note="LED pin is a logic input (onboard BSS138 + 10k pull-up): high/open = backlight on, low = off; PWM ok"),
 
-    # ------------------------------------------------------------------ Optional UWB ranging (POD option)
-    P("U9", "RF_Module:DWM3000", "DWM3000", "RF_Module:DWM1000",
-      {"17": "SPI_CS", "18": "SPI_MOSI", "19": "SPI_MISO", "20": "SPI_SCK", "22": "DC_IRQ", "3": "RST_SHARED",
-       "6": "+3V3", "7": "+3V3", "5": "+3V3", "2": "GND", "8": "GND", "16": "GND", "21": "GND", "23": "GND", "24": "GND",
-       "1": NC, "4": NC, "9": NC, "10": NC, "11": NC, "12": NC, "13": NC, "14": NC, "15": NC}, "UWB", "OPT",
-      note="Pod-to-pod ranging. Same SPI pins as display - never fit both. VDDAON/WAKEUP wiring: verify vs DWM3000 datasheet"),
-    R("R25", "100k", "DC_IRQ", "GND", "UWB", "OPT", note="DWM3000 IRQ floats in sleep: 100k pull-down (DS Table 2). RSTn is open-drain: never drive it high"),
-    C("C22", "10u", "+3V3", "GND", "UWB", C0805, "OPT"),
-    C("C23", "100n", "+3V3", "GND", "UWB", variant="OPT"),
+    # (Optional DWM3000 pod-to-pod UWB ranging removed from rev A: its antenna keep-out blocked routing.
+    #  Planned for rev B - see hardware/README.md.)
 
     # ------------------------------------------------------------------ Buttons: 3, centred under the screen (active low)
     P("SW4", "Switch:SW_Push", "UP", "Button_Switch_THT:SW_PUSH-12mm", {"1": "BTN_UP", "2": "GND"}, "UI", "DISP",
@@ -220,7 +213,7 @@ BLOCK_TITLES = {
     "USB": "USB-C input + ESD", "CHARGER": "LiPo charger / power path (BQ24074)", "FUEL": "Fuel gauge (MAX17048)",
     "3V3": "Power switch + 3.3 V buck-boost (TPS63001)", "5V": "Radar head 5 V boost + LC filter [POD]",
     "MCU": "ESP32-S3-WROOM-1U", "SENSORS": "IMU + magnetometer (I2C)", "DISPLAY": "3.5in display + backlight [DISPLAY]",
-    "UWB": "Optional pod-to-pod UWB ranging [OPT]", "UI": "Buttons, buzzer, RGB LED", "HEAD": "Radar head connector [POD]",
+"UI": "Buttons, buzzer, RGB LED", "HEAD": "Radar head connector [POD]",
     "MECH": "Mounting",
 }
 

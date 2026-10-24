@@ -476,3 +476,8 @@ Replaces the 5-button layout in §14. Three 12 mm buttons sit on the tab directl
 | **DOWN** | down / zoom out | — |
 
 GPIO7 and GPIO15 are now spare (test pads TP1/TP2).
+
+### Update (2026-10-24): board routed
+- Rev A board fully routed (4 layers, 0 unconnected, 0 electrical DRC errors, matches schematic). Manufacturing files are in `hardware/fab/`.
+- The button-tab break line is now **routed slots + bridges**, not a V-score. A V-cut would sever the button traces.
+- The optional DWM3000 pod-to-pod ranging footprint moved to rev B (its antenna keep-out blocked routing).

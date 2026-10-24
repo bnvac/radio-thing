@@ -53,3 +53,9 @@
 * **Decisions/Changes**: Full hardware check. Datasheet verification by 2 sub-agents gave 13 fixes (ITERM 3.0k, ILIM 1.78k, L1 2.2 uH + VINA RC, TPS61202 COUT 22 uF, LIS2MDL C1 220 nF + 10 uF, MSP3525 display on PWR_EN with direct LED-pin drive + SD_CS pull-up, buzzer from 3V3 via 15R, DWM IRQ pull-down, head UART series R, tab M3 holes). Stackup changed to F sig / In1 GND / In2 pwr+sig / B sig. Freerouting 2.1.0 trial: 9 of 243 left unrouted.
 * **Known Bugs/Gaps**: Routing not done. Open: confirm MSP3525 module + J3/button alignment, buzzer part, MAX17048 EP land pattern, USBLC6 pinout (secondary source), LD2450 connector pinout.
 <!-- MEMORY_UPDATE_END -->
+
+<!-- MEMORY_UPDATE_START -->
+### Update: 2026-10-24
+* **Decisions/Changes**: Board routed. Pipeline: build.sh (schematic + cluster-placed board) -> route.sh (Freerouting 1.9.0 under xvfb, 2 passes; v2.1.0 ignores -mp and never writes SES) -> tools/fab_outputs.py (Gerber/drill zip, per-variant BOM+CPL, origin = board bottom-left). Changes: V-score replaced by routed slots + 5 bridges (V-cut cuts all copper); DWM3000 removed from rev A; power traces 0.3 mm; edge keep-outs 0.35 mm; locked USB-C orientation-join pattern; full GND connection on IC thermal pads; passive silk refs hidden. pcbnew.SaveBoard resets .kicad_pro, so apply_project_rules() runs after every save.
+* **Known Bugs/Gaps**: Routing is autorouted, so a human should review the power stages in KiCad. Open: confirm MSP3525 module/J3 + button alignment, buzzer part, MAX17048 EP land pattern, USBLC6 pinout, LD2450 connector pinout. LCSC part numbers not filled in the BOMs.
+<!-- MEMORY_UPDATE_END -->

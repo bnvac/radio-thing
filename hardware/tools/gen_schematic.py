@@ -117,7 +117,7 @@ def main():
     for p in PARTS:
         if p.block not in blocks:
             blocks.append(p.block)
-    cols = [["USB", "CHARGER", "FUEL"], ["3V3", "5V", "HEAD"], ["MCU"], ["SENSORS", "UWB"], ["DISPLAY", "UI", "MECH"]]
+    cols = [["USB", "CHARGER", "FUEL"], ["3V3", "5V", "HEAD"], ["MCU"], ["SENSORS"], ["DISPLAY", "UI", "MECH"]]
     assert sorted(sum(cols, [])) == sorted(blocks), (blocks, cols)
     col_x = 25.4
     max_y = 0

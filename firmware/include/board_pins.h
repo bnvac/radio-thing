@@ -16,15 +16,15 @@
 #define PIN_I2C_SDA     8
 #define PIN_I2C_SCL    18
 
-// --- SPI bus: [DISP] ST7796 3.5" display  /  [POD] optional DWM3000 UWB ranging ---
+// --- SPI bus: [DISP] ST7796 3.5" display  (rev B: optional DWM3000 UWB ranging on the POD; not on rev A) ---
 #define PIN_SPI_SCK    12
 #define PIN_SPI_MOSI   11
 #define PIN_SPI_MISO   13
 #define PIN_SPI_CS     10   // LCD_CS [DISP] / DWM_CS [POD]
 #define PIN_LCD_DC      9   // [DISP]
-#define PIN_DWM_IRQ     9   // [POD]  (shares pin with LCD_DC; never both fitted)
+#define PIN_DWM_IRQ     9   // rev B only (shares pin with LCD_DC; never both fitted)
 #define PIN_LCD_RST    14   // [DISP]
-#define PIN_DWM_RST    14   // [POD]
+#define PIN_DWM_RST    14   // rev B only (DWM3000 RSTn is open-drain: never drive high)
 #define PIN_LCD_BL     21   // [DISP] backlight enable, PWM-capable (high = on)
 
 // --- Buttons (active low, use INPUT_PULLUP). 3 buttons, centred under the screen ---
